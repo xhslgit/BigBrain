@@ -6,13 +6,21 @@ import {
   Route,
 } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import DashboardPage from './pages/DashboardPage';
 
 export default function App () {
   return (
     <Router>
         <Switch>
-          <Route path="/login" exact>
+          <Route path='/login' exact>
             <LoginPage />
+          </Route>
+          <Route path='/register' exact>
+            <RegisterPage />
+          </Route>
+          <Route path='/dashboard' exact>
+            <DashboardPage />
           </Route>
         </Switch>
     </Router>

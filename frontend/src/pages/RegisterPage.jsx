@@ -11,7 +11,7 @@ import {
 } from 'rsuite';
 
 import 'rsuite/dist/styles/rsuite-default.css';
-import useToken from '../utils/useToken';
+
 const { StringType } = Schema.Types;
 
 const model = Schema.Model({
@@ -19,47 +19,48 @@ const model = Schema.Model({
     .isEmail('Please enter a valid email address')
     .isRequired('An email is required'),
   password: StringType()
-    .isRequired('A password is required')
+    .isRequired('A password is required'),
+  name: StringType()
+    .isRequired('A name is required')
 });
 
-function login (email, password) {
-  return fetch(new URL('admin/auth/login', 'http://localhost:5005/'), {
+function register (email, password, name) {
+  return fetch(new URL('admin/auth/register', 'http://localhost:5005/'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ email, password, name }),
   }).then((data) => {
     if (data.status === 200) {
       return data.json();
     }
+    return data.json();
   });
 }
 
-export default function LoginPage () {
+export default function RegisterPage () {
+  const [registerForm, setRegisterForm] = useState({ email: '', password: '', name: '' })
   const history = useHistory();
-
-  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
-
-  const { token, setToken } = useToken();
-  console.log(token);
   const handleSubmit = () => {
-    login(loginForm.email, loginForm.password).then((data) => {
-      console.log('logging in');
-      setToken(data.token);
-      history.push('/dashboard');
+    register(registerForm.email, registerForm.password, registerForm.name).then((data) => {
+      history.push('/login');
     })
   }
   return (
-    <Panel header={<h3>Login</h3>} shaded>
+    <Panel header={<h3>Register</h3>} shaded>
       <Form
         model = {model}
         fluid
         layout = 'vertical'
         onSubmit = {handleSubmit}
-        formValue = {loginForm}
-        onChange = {newValue => setLoginForm(newValue)}
+        formValue = {registerForm}
+        onChange = {newValue => setRegisterForm(newValue)}
       >
+        <FormGroup controlId='name-input'>
+          <ControlLabel>Name</ControlLabel>
+          <FormControl id='name-input' name='name'/>
+        </FormGroup>
         <FormGroup controlId='email-input'>
           <ControlLabel>Email</ControlLabel>
           <FormControl id='email-input' name='email'/>
@@ -69,8 +70,8 @@ export default function LoginPage () {
           <FormControl id='password-input' name='password' type='password'/>
         </FormGroup>
         <FormGroup>
-            <Button appearance="primary" type="submit">Login</Button>
-            <Link to="/register">Register here!</Link>
+            <Button appearance="primary" type="submit">Register</Button>
+            <Link to="/login">Login here!</Link>
         </FormGroup>
       </Form>
     </Panel>
