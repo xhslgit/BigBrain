@@ -41,11 +41,12 @@ export default function LoginPage () {
 
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
 
-  const { token, setToken } = useToken();
-  console.log(token);
+  const temp = useToken();
+  const setToken = temp.setToken;
   const handleSubmit = () => {
     login(loginForm.email, loginForm.password).then((data) => {
       console.log('logging in');
+      console.log(data.token)
       setToken(data.token);
       history.push('/dashboard');
     })
