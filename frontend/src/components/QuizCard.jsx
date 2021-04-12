@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Panel
+  Panel,
+  Button
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
 import PropTypes from 'prop-types';
 import useToken from '../utils/useToken';
+import styled from 'styled-components';
 
+const OptionsMenu = styled.div`
+  display: flex;
+  flex-direction: vertical;
+`
 export default function QuizCard ({ QuizId }) {
   const temp = useToken();
   const token = temp.token;
@@ -23,21 +29,9 @@ export default function QuizCard ({ QuizId }) {
       return data.json();
     });
   }
-  // const fetchQuiz = useCallback(
-  //   () => getQuizInfo(token, QuizId).then((data) => {
-  //     setQuizInfo(data);
-  //   }),
-  //   [token, QuizId],
-  // );
 
-  // useEffect(() => {
-  //   fetchQuiz();
-  // }, [fetchQuiz]);
-
-  // console.log(quizInfo);
   useEffect(() => {
     getQuizInfo(token, QuizId).then((data) => {
-      // console.log('data: ', data);
       setQuizInfo(data);
     })
   }, []);
@@ -47,8 +41,13 @@ export default function QuizCard ({ QuizId }) {
       <img src="https://via.placeholder.com/240x240" height="240" />
       <Panel header={quizInfo.name}>
         <p>
-          <small>yo haha</small>
+          <small>{quizInfo.owner}</small>
         </p>
+        <OptionsMenu>
+          <Button appearance="primary" onClick={console.log('edit')}>Edit</Button>
+          <Button appearance="primary" color="red" onClick={console.log('Delete')}>Delete</Button>
+          <Button appearance="primary" onClick={console.log('start')}>Start</Button>
+        </OptionsMenu>
       </Panel>
     </Panel>
   )

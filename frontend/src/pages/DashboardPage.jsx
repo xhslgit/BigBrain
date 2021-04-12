@@ -3,22 +3,16 @@ import { useHistory } from 'react-router-dom';
 import {
   Button,
   Container,
+  Header,
   Sidebar,
-  Content,
   Sidenav,
   FlexboxGrid
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 import useToken from '../utils/useToken';
 import QuizCard from '../components/QuizCard';
-
-const DashboardStyled = styled(Content)`
-height: 100%;
-display: flex;
-flex-direction: row;
-flex-wrap: wrap;
-`
+import NewGameModal from '../components/NewGameModal';
 
 export default function DashboardPage () {
   const logout = (token) => {
@@ -71,14 +65,23 @@ export default function DashboardPage () {
       history.push('/login');
     });
   }
+  const handleNewGame = () => {
+    console.log('new game clicked');
+  }
 
   const headerStyle = {
-    padding: 20,
+    padding: 18,
     fontSize: 16,
+    height: 56,
     background: '#34c3ff',
-    color: ' #fff'
+    color: ' #fff',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden'
   };
-
+  const [showModal, setShowModal] = useState(false);
+  const toggleShow = () => {
+    setShowModal(!showModal);
+  }
   return (
   <Container styles={{ height: '100%' }}>
     <Sidebar>
@@ -88,14 +91,19 @@ export default function DashboardPage () {
         </Sidenav.Header>
         <Sidenav.Body>
           <nav>
+            <Button appearance="subtle" onClick={handleNewGame}>New Game</Button>
+          </nav>
+          <nav>
             <Button appearance="subtle" onClick={handleLogout}>Logout</Button>
           </nav>
         </Sidenav.Body>
       </Sidenav>
     </Sidebar>
-    <DashboardStyled>
-      <h3>Welcome to your Dashboard</h3>
-      <FlexboxGrid>
+    <Container>
+      <Header style={{ align: 'center' }}>
+        <h2>Welcome to your dashboard</h2>
+      </Header>
+      <FlexboxGrid align="top" justify="space-around">
         {quizzes.map((val, idx) => {
           if (val === null) {
             return <h1> Empty </h1>
@@ -106,7 +114,13 @@ export default function DashboardPage () {
           />
         })}
       </FlexboxGrid>
-    </DashboardStyled>
+      <NewGameModal
+        showModal={showModal}
+        onHide={toggleShow}
+        onCreate={getQuizzes}
+      />
+    </Container>
+
   </Container>
   )
 }
