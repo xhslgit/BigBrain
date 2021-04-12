@@ -36,6 +36,17 @@ export default function QuizCard ({ QuizId }) {
     })
   }, []);
 
+  const handleEdit = () => {
+    console.log('edit')
+  }
+
+  const handleDelete = () => {
+    console.log('Delete')
+  }
+
+  const handleStart = () => {
+    console.log('start')
+  }
   return (
     <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
       <img src="https://via.placeholder.com/240x240" height="240" />
@@ -44,9 +55,9 @@ export default function QuizCard ({ QuizId }) {
           <small>{quizInfo.owner}</small>
         </p>
         <OptionsMenu>
-          <Button appearance="primary" onClick={console.log('edit')}>Edit</Button>
-          <Button appearance="primary" color="red" onClick={console.log('Delete')}>Delete</Button>
-          <Button appearance="primary" onClick={console.log('start')}>Start</Button>
+          <Button appearance="primary" onClick={handleEdit}>Edit</Button>
+          <Button appearance="primary" color="red" onClick={handleDelete}>Delete</Button>
+          <Button appearance="primary" onClick={handleStart}>Start</Button>
         </OptionsMenu>
       </Panel>
     </Panel>

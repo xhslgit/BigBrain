@@ -65,9 +65,6 @@ export default function DashboardPage () {
       history.push('/login');
     });
   }
-  const handleNewGame = () => {
-    console.log('new game clicked');
-  }
 
   const headerStyle = {
     padding: 18,
@@ -91,7 +88,7 @@ export default function DashboardPage () {
         </Sidenav.Header>
         <Sidenav.Body>
           <nav>
-            <Button appearance="subtle" onClick={handleNewGame}>New Game</Button>
+            <Button appearance="subtle" onClick={toggleShow}>New Game</Button>
           </nav>
           <nav>
             <Button appearance="subtle" onClick={handleLogout}>Logout</Button>
