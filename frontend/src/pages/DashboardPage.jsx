@@ -52,10 +52,15 @@ export default function DashboardPage () {
 
   const { token, setToken } = useToken();
 
-  useEffect(() => {
+  const getSetQuizzes = () => {
     getQuizzes(token).then((data) => {
-      setQuizzes(data.quizzes);
+      const sorted = data.quizzes.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+      setQuizzes(sorted);
     })
+  }
+
+  useEffect(() => {
+    getSetQuizzes();
   }, []);
 
   const handleLogout = () => {
@@ -106,7 +111,7 @@ export default function DashboardPage () {
             return <h1> Empty </h1>
           }
           return <QuizCard
-            key={idx}
+            key={val.id}
             QuizId={val.id}
           />
         })}
@@ -114,10 +119,9 @@ export default function DashboardPage () {
       <NewGameModal
         showModal={showModal}
         onHide={toggleShow}
-        onCreate={getQuizzes}
+        onCreate={getSetQuizzes}
       />
     </Container>
-
   </Container>
   )
 }
