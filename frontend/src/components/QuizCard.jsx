@@ -12,7 +12,7 @@ const OptionsMenu = styled.div`
   display: flex;
   flex-direction: vertical;
 `
-export default function QuizCard ({ QuizId }) {
+export default function QuizCard ({ QuizId, onDelete }) {
   const temp = useToken();
   const token = temp.token;
   const [quizInfo, setQuizInfo] = useState({});
@@ -20,6 +20,17 @@ export default function QuizCard ({ QuizId }) {
   const getQuizInfo = (token, id) => {
     return fetch(new URL(`admin/quiz/${id}`, 'http://localhost:5005'), {
       method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    }).then((data) => {
+      return data.json();
+    });
+  }
+  const deleteQuiz = (token, id) => {
+    return fetch(new URL(`admin/quiz/${id}`, 'http://localhost:5005'), {
+      method: 'DELETE',
       headers: {
         accept: 'application/json',
         Authorization: 'Bearer ' + token,
@@ -41,7 +52,9 @@ export default function QuizCard ({ QuizId }) {
   }
 
   const handleDelete = () => {
-    console.log('Delete')
+    deleteQuiz(token, QuizId).then((data) => {
+      return onDelete();
+    })
   }
 
   const handleStart = () => {
@@ -66,4 +79,5 @@ export default function QuizCard ({ QuizId }) {
 
 QuizCard.propTypes = {
   QuizId: PropTypes.number.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };

@@ -113,6 +113,7 @@ export default function DashboardPage () {
           return <QuizCard
             key={val.id}
             QuizId={val.id}
+            onDelete={getSetQuizzes}
           />
         })}
       </FlexboxGrid>
