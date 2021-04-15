@@ -6,10 +6,10 @@ import {
   Panel,
   Container,
   Content,
-  Button
+  Button,
+  List
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
-import QuestionsList from '../components/QuestionsList';
 
 import useToken from '../utils/useToken';
 
@@ -67,6 +67,9 @@ export default function EditQuizPage () {
     console.log('adding a question');
     history.push(`/dashboard/edit/${QuizId}/${uuidv4()}`);
   }
+  const handleEditQuestion = (e) => {
+    console.log(e);
+  }
   return (
     <Container>
       <Content>
@@ -75,7 +78,24 @@ export default function EditQuizPage () {
             <Panel header={<h2>Edit Quiz: {name}</h2>} bordered>
               {thumbnail}
               <Button appearance="primary" onClick={handleAddQuestion}>Add Question</Button>
-              <QuestionsList questions={questions} />
+              <List bordered hover>
+                {questions ? (
+                  questions.map((item, idx) => (
+                    <List.item key={item.id} index={idx}>
+                      <FlexboxGrid>
+                        <FlexboxGrid.Item colspan={2}>
+                          {item.question}
+                        </FlexboxGrid.Item>
+                        <FlexboxGrid>
+                          <Button appearance="primary" onClick={e => handleEditQuestion(e)}>Edit Question</Button>
+                        </FlexboxGrid>
+                      </FlexboxGrid>
+                    </List.item>
+                  ))
+                ) : (
+                  <p> this list has no questions</p>
+                )};
+              </List>
             </Panel>
           </FlexboxGrid.Item>
         </FlexboxGrid>

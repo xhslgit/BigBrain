@@ -13,10 +13,11 @@ import {
   Button
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
+import PropTypes from 'prop-types';
 const { StringType, NumberType } = Schema.Types;
 // import useToken from '../utils/useToken';
 
-export default function EditQuestionPage () {
+export default function EditQuestionPage ({ handleNew }) {
   const model = Schema.Model({
     question: StringType().isRequired('What is your question?'),
     type: StringType().isRequired('What type is your question?'),
@@ -41,6 +42,10 @@ export default function EditQuestionPage () {
     image: null,
     video: '',
   });
+
+  const handleSubmit = () => {
+
+  }
   return (
     <Panel shaded header={<h1>Edit Question</h1>}>
       <h1>{QuizId}</h1>
@@ -51,6 +56,7 @@ export default function EditQuestionPage () {
         layout = 'vertical'
         formValue = {questionForm}
         onChange = {newValue => setQuestionForm(newValue)}
+        onSubmit = {handleSubmit}
       >
         <FormGroup controlId='question-input'>
           <ControlLabel><h5>What is the question?</h5></ControlLabel>
@@ -97,4 +103,8 @@ export default function EditQuestionPage () {
       </Form>
     </Panel>
   )
+}
+
+EditQuestionPage.propTypes = {
+  handleNew: PropTypes.func.isRequired,
 }
