@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Panel,
   Button
@@ -10,12 +11,14 @@ import styled from 'styled-components';
 
 const OptionsMenu = styled.div`
   display: flex;
-  flex-direction: vertical;
+  flex-direction: row;
+  column-gap: 5px;
 `
 export default function QuizCard ({ QuizId, onDelete }) {
   const temp = useToken();
   const token = temp.token;
   const [quizInfo, setQuizInfo] = useState({});
+  const history = useHistory();
 
   const getQuizInfo = (token, id) => {
     return fetch(new URL(`admin/quiz/${id}`, 'http://localhost:5005'), {
@@ -48,7 +51,8 @@ export default function QuizCard ({ QuizId, onDelete }) {
   }, []);
 
   const handleEdit = () => {
-    console.log('edit')
+    history.push(`/dashboard/edit/${QuizId}`);
+    console.log('edit');
   }
 
   const handleDelete = () => {
@@ -68,9 +72,9 @@ export default function QuizCard ({ QuizId, onDelete }) {
           <small>{quizInfo.owner}</small>
         </p>
         <OptionsMenu>
+          <Button appearance="primary" onClick={handleStart}>Start</Button>
           <Button appearance="primary" onClick={handleEdit}>Edit</Button>
           <Button appearance="primary" color="red" onClick={handleDelete}>Delete</Button>
-          <Button appearance="primary" onClick={handleStart}>Start</Button>
         </OptionsMenu>
       </Panel>
     </Panel>

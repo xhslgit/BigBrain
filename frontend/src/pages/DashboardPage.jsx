@@ -106,13 +106,13 @@ export default function DashboardPage () {
         <h2>Welcome to your dashboard</h2>
       </Header>
       <FlexboxGrid align="top" justify="space-around">
-        {quizzes.map((val, idx) => {
-          if (val === null) {
+        {quizzes.map((item, idx) => {
+          if (item === null) {
             return <h1> Empty </h1>
           }
           return <QuizCard
-            key={val.id}
-            QuizId={val.id}
+            key={item.id}
+            QuizId={item.id}
             onDelete={getSetQuizzes}
           />
         })}

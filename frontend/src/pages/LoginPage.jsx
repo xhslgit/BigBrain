@@ -20,6 +20,7 @@ const model = Schema.Model({
     .isRequired('An email is required'),
   password: StringType()
     .isRequired('A password is required')
+    .minLength(3, 'Please enter atleast 3 characters for your password')
 });
 
 function login (email, password) {

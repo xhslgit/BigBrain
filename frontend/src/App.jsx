@@ -8,6 +8,8 @@ import {
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
+import EditQuizPage from './pages/EditQuizPage';
+import EditQuestionPage from './pages/EditQuestionPage';
 
 export default function App () {
   return (
@@ -21,6 +23,12 @@ export default function App () {
           </Route>
           <Route path='/dashboard' exact>
             <DashboardPage />
+          </Route>
+          <Route path='/dashboard/edit/:QuizId' exact>
+            <EditQuizPage />
+          </Route>
+          <Route path='/dashboard/edit/:QuizId/:QuestionId' exact>
+            <EditQuestionPage />
           </Route>
         </Switch>
     </Router>
