@@ -23,7 +23,7 @@ import useToken from '../utils/useToken';
 // `
 
 export default function EditQuizPage () {
-  const QuizId = useParams().Quizid;
+  const QuizId = useParams().QuizId;
   const token = useToken().token;
   const history = useHistory();
   const [questions, setQuestions] = useState([]);
@@ -73,28 +73,29 @@ export default function EditQuizPage () {
   return (
     <Container>
       <Content>
-        <FlexboxGrid justify="center" style={{ 'margin-top': '5em' }}>
+        <FlexboxGrid justify="center" style={{ marginTop: '5em' }}>
           <FlexboxGrid.Item>
             <Panel header={<h2>Edit Quiz: {name}</h2>} bordered>
               {thumbnail}
               <Button appearance="primary" onClick={handleAddQuestion}>Add Question</Button>
               <List bordered hover>
-                {questions ? (
-                  questions.map((item, idx) => (
-                    <List.item key={item.id} index={idx}>
-                      <FlexboxGrid>
-                        <FlexboxGrid.Item colspan={2}>
-                          {item.question}
-                        </FlexboxGrid.Item>
-                        <FlexboxGrid>
-                          <Button appearance="primary" onClick={e => handleEditQuestion(e)}>Edit Question</Button>
-                        </FlexboxGrid>
-                      </FlexboxGrid>
-                    </List.item>
-                  ))
-                ) : (
-                  <p> this list has no questions</p>
-                )};
+                {questions
+                  ? (
+                      questions.map((item, idx) => (
+                        <List.item key={item.id} index={idx}>
+                          <FlexboxGrid>
+                            <FlexboxGrid.Item colspan={2}>
+                              {item.question}
+                            </FlexboxGrid.Item>
+                            <FlexboxGrid>
+                              <Button appearance="primary" onClick={e => handleEditQuestion(e)}>Edit Question</Button>
+                            </FlexboxGrid>
+                          </FlexboxGrid>
+                        </List.item>
+                      )))
+                  : (
+                      <p> this list has no questions</p>
+                    )}
               </List>
             </Panel>
           </FlexboxGrid.Item>

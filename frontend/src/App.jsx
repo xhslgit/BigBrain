@@ -24,11 +24,11 @@ export default function App () {
           <Route path='/dashboard' exact>
             <DashboardPage />
           </Route>
-          <Route path='/dashboard/edit/:QuizId' exact>
-            <EditQuizPage />
-          </Route>
-          <Route path='/dashboard/edit/:QuizId/:QuestionId' exact>
+          <Route path='/dashboard/edit/:QuizId/:QuestionId'>
             <EditQuestionPage />
+          </Route>
+          <Route path='/dashboard/edit/:QuizId'>
+            <EditQuizPage />
           </Route>
         </Switch>
     </Router>

@@ -10,14 +10,15 @@ import {
   RadioGroup,
   Radio,
   InputNumber,
-  Button
+  Button,
+  Uploader
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
-import PropTypes from 'prop-types';
+import { fileToDataUrl } from '../utils/helpers';
 const { StringType, NumberType } = Schema.Types;
 // import useToken from '../utils/useToken';
 
-export default function EditQuestionPage ({ handleNew }) {
+export default function EditQuestionPage () {
   const model = Schema.Model({
     question: StringType().isRequired('What is your question?'),
     type: StringType().isRequired('What type is your question?'),
@@ -36,15 +37,48 @@ export default function EditQuestionPage ({ handleNew }) {
     id: QuestionId,
     question: '',
     type: '',
-    answers: [],
     points: 1,
     time: 30,
-    image: null,
     video: '',
+    image: '',
+    answers: [],
   });
-
+  const [mediaType, setMediaType] = useState('videoinput');
   const handleSubmit = () => {
+    console.log(questionForm);
+  }
 
+  const handleTimeChange = e => {
+    const newArr = questionForm;
+    newArr.time = e;
+    setQuestionForm(newArr);
+  }
+  const handlePointChange = e => {
+    const newArr = questionForm;
+    newArr.points = e;
+    setQuestionForm(newArr);
+  }
+  const handleTypeChange = e => {
+    const newArr = questionForm;
+    newArr.type = e;
+    setQuestionForm(newArr);
+  }
+  const handleMediaChange = e => {
+    console.log(e);
+    setMediaType(e);
+  }
+
+  const handleImageChange = e => {
+    console.log(e);
+    const image = e.pop();
+    if (image) {
+      fileToDataUrl(image.blobFile).then((data) => {
+        const newArr = questionForm;
+        newArr.image = data;
+        newArr.video = '';
+        setQuestionForm(newArr);
+      })
+    }
   }
   return (
     <Panel shaded header={<h1>Edit Question</h1>}>
@@ -55,7 +89,10 @@ export default function EditQuestionPage ({ handleNew }) {
         fluid
         layout = 'vertical'
         formValue = {questionForm}
-        onChange = {newValue => setQuestionForm(newValue)}
+        onChange = {newValue => {
+          setQuestionForm(newValue);
+          console.log(newValue);
+        }}
         onSubmit = {handleSubmit}
       >
         <FormGroup controlId='question-input'>
@@ -64,36 +101,41 @@ export default function EditQuestionPage ({ handleNew }) {
         </FormGroup>
         <FormGroup controlId='type-input'>
           <ControlLabel><h5>What type of answer does this question have?</h5></ControlLabel>
-          <RadioGroup id='type-input' name='type' inline>
-            <Radio value='single-answer'>Single answer</Radio>
-            <Radio value='multiple-answer'>Multiple answers</Radio>
+          <RadioGroup id='type-input' name='type' inline defaultValue={'single'} onChange={handleTypeChange}>
+            <Radio value='single' name='single'>Single answer</Radio>
+            <Radio value='multiple' name='multiple '>Multiple answers</Radio>
           </RadioGroup>
         </FormGroup>
         <FormGroup controlId='points-input'>
           <ControlLabel><h5>How many points is this question worth?</h5></ControlLabel>
           <ControlLabel><p>Max 10 points</p></ControlLabel>
-          <InputNumber defaultValue={1} max={10} min={1} id='points-input' name='points'/>
+          <InputNumber defaultValue={1} max={10} min={1} id='points-input' name='points' onChange={handlePointChange} />
         </FormGroup>
         <FormGroup controlId='time-input'>
           <ControlLabel><h5>How long will the player have to answer the question?</h5></ControlLabel>
           <ControlLabel><p>In seconds (max 300s/5mins)</p></ControlLabel>
-          <InputNumber defaultValue={30} max={300} min={3} id='time-input' name='time'/>
+          <InputNumber defaultValue={30} max={300} min={3} id='time-input' name='time' onChange={handleTimeChange} />
         </FormGroup>
-        <FormGroup controlId='video-input'>
-          <ControlLabel><h5>Optional youtube video link:</h5></ControlLabel>
-          <ControlLabel><p>Video will be displayed during the question</p></ControlLabel>
-          <FormControl id="video-input" name="video" type="string"/>
+        <FormGroup controlId='media-input'>
+          <ControlLabel><h5>Optional video or image</h5></ControlLabel>
+          <ControlLabel><p>The video or the image will be displayed during the question</p></ControlLabel>
+          <RadioGroup id='media-input' name='media' inline defaultValue={'videoinput'} onChange={handleMediaChange}>
+            <Radio value='videoinput' name='videoinput'>Video</Radio>
+            <Radio value='imageinput' name='imageinput '>Image</Radio>
+          </RadioGroup>
         </FormGroup>
-        <FormGroup controlId='image-input'>
-          <ControlLabel><h5>Optional image upload:</h5></ControlLabel>
-          <ControlLabel><p>Image will be displayed during the question<br></br>The video takes priority over image</p></ControlLabel>
-          <FormControl id="image-input" name="video" type="string"/>
-        </FormGroup>
-        <FormGroup controlId='image-input'>
-          <ControlLabel><h5>Optional image upload:</h5></ControlLabel>
-          <ControlLabel><p>Image will be displayed during the question<br></br>The video takes priority over image</p></ControlLabel>
-          <FormControl id="image-input" name="video" type="string"/>
-        </FormGroup>
+        {mediaType === 'videoinput'
+          ? (
+              <FormGroup controlId='video-input'>
+                <ControlLabel><h5>Optional youtube video link:</h5></ControlLabel>
+                <FormControl id="video-input" name="video" type="string"/>
+              </FormGroup>)
+          : (
+              <FormGroup controlId='image-input'>
+                <ControlLabel><h5>Optional image upload:</h5></ControlLabel>
+                <Uploader listType="picture" accept="image/png, image/jpeg" fileListVisible={false} onChange={handleImageChange} />
+              </FormGroup>)
+        }
         <FormGroup>
           <Button appearance="primary" type="submit">Submit</Button>
           <Link to={`/dashboard/edit/${QuizId}`}>
@@ -103,8 +145,4 @@ export default function EditQuestionPage ({ handleNew }) {
       </Form>
     </Panel>
   )
-}
-
-EditQuestionPage.propTypes = {
-  handleNew: PropTypes.func.isRequired,
 }
