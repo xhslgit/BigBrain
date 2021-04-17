@@ -5,7 +5,7 @@
 */
 export const quizQuestionPublicReturn = question => {
   console.log('See question: ', question);
-  return question;
+  return question.question;
 };
 
 /*
@@ -13,9 +13,13 @@ export const quizQuestionPublicReturn = question => {
  the correct answers (minimum 1).
 */
 export const quizQuestionGetCorrectAnswers = question => {
-  return [
-    123,
-  ]; // For a single answer
+  let correctAns = [];
+  for (const answer of question.answers) {
+    if (answer.is_correct) {
+      correctAns.push(answer.id);
+    }
+  }
+  return correctAns; // For a single answer
 };
 
 /*
@@ -23,11 +27,11 @@ export const quizQuestionGetCorrectAnswers = question => {
  all of the answers, correct or incorrect.
 */
 export const quizQuestionGetAnswers = question => {
-  return [
-    123,
-    456,
-    678,
-  ]; // For a single answer
+  let ans = [];
+  for (const answer of question.answers) {
+    ans.push(answer.id);
+  }
+  return ans; // For a single answer
 };
 
 /*
@@ -35,5 +39,5 @@ export const quizQuestionGetAnswers = question => {
  of the question once it starts. (Seconds)
 */
 export const quizQuestionGetDuration = question => {
-  return 10;
+  return question.time;
 };

@@ -14,12 +14,18 @@ const OptionsMenu = styled.div`
   flex-direction: row;
   column-gap: 5px;
 `
+const ImageContainer = styled.div`
+  width: 240px;
+  height: 240px;
+  outline: 2px black solid;
+  overflow: hidden;
+`
 export default function QuizCard ({ QuizId, onDelete }) {
   const temp = useToken();
   const token = temp.token;
   const [quizInfo, setQuizInfo] = useState({});
   const history = useHistory();
-
+  const [totalTime, setTotalTime] = useState(0);
   const getQuizInfo = (token, id) => {
     return fetch(new URL(`admin/quiz/${id}`, 'http://localhost:5005'), {
       method: 'GET',
@@ -47,6 +53,13 @@ export default function QuizCard ({ QuizId, onDelete }) {
   useEffect(() => {
     getQuizInfo(token, QuizId).then((data) => {
       setQuizInfo(data);
+      if (data.questions) {
+        let time = 0;
+        for (const q of data.questions) {
+          time += q.time;
+        }
+        setTotalTime(time);
+      }
     })
   }, []);
 
@@ -64,13 +77,18 @@ export default function QuizCard ({ QuizId, onDelete }) {
   const handleStart = () => {
     console.log('start')
   }
+
   return (
     <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
-      <img src="https://via.placeholder.com/240x240" height="240" />
+      <ImageContainer>
+        <img src={quizInfo.thumbnail} height="235px" width="235px" alt="thumbnail preview" />
+      </ImageContainer>
       <Panel header={quizInfo.name}>
-        <p>
-          <small>{quizInfo.owner}</small>
-        </p>
+        {quizInfo.questions && quizInfo.questions.length
+          ? <p>Total questions: {quizInfo.questions.length}<br></br>Total duration of quiz: {totalTime}s</p>
+          : <p>No questions added yet</p>
+        }
+        <p>Created by: {quizInfo.owner}</p>
         <OptionsMenu>
           <Button appearance="primary" onClick={handleStart}>Start</Button>
           <Button appearance="primary" onClick={handleEdit}>Edit</Button>

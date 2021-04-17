@@ -7,21 +7,21 @@ import {
   Container,
   Content,
   Button,
-  List
+  List,
+  Uploader,
+  Alert
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
-
+import { fileToDataUrl } from '../utils/helpers';
 import useToken from '../utils/useToken';
+import styled from 'styled-components';
 
-// const PageContainer = styled(Container)`
-//   width: 100%;
-//   height: 100vh;
-//   overflow: auto;
-//   display: flex;
-//   flex-direction: row;
-//   justify: center;
-// `
-
+const ImageContainer = styled.div`
+  width: 240px;
+  height: 240px;
+  border: 1px black solid;
+  overflow: hidden;
+`
 export default function EditQuizPage () {
   const QuizId = useParams().QuizId;
   const token = useToken().token;
@@ -41,22 +41,22 @@ export default function EditQuizPage () {
       return data.json();
     });
   }
-
-  // const editQuizInfo = (token, id, payload) => {
-  //   return fetch(new URL(`admin/quiz/${id}`, 'http://localhost:5005'), {
-  //     method: 'PUT',
-  //     headers: {
-  //       accept: 'application/json',
-  //       Authorization: 'Bearer' + token,
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: payload,
-  //   }).then((data) => {
-  //     return data.json();
-  //   })
-  // }
+  const editQuizInfo = (token, id, payload) => {
+    return fetch(new URL(`admin/quiz/${id}`, 'http://localhost:5005'), {
+      method: 'PUT',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json',
+      },
+      body: payload,
+    }).then((data) => {
+      return data.json();
+    })
+  }
   useEffect(() => {
     getQuizInfo(token, QuizId).then((data) => {
+      console.log(data);
       setQuestions(data.questions);
       setName(data.name);
       setThumbnail(data.thumbnail);
@@ -67,36 +67,66 @@ export default function EditQuizPage () {
     console.log('adding a question');
     history.push(`/dashboard/edit/${QuizId}/${uuidv4()}`);
   }
-  const handleEditQuestion = (e) => {
-    console.log(e);
+  const handleAddThumbnail = e => {
+    const image = e.pop();
+    if (image) {
+      fileToDataUrl(image.blobFile).then((data) => {
+        setThumbnail(data);
+      })
+    }
+  }
+  const handleEditQuestion = id => {
+    history.push(`/dashboard/edit/${QuizId}/${id}`);
+  }
+  const handleSaveQuiz = () => {
+    const payload = {
+      questions: questions,
+      name: name,
+      thumbnail: thumbnail
+    }
+    editQuizInfo(token, QuizId, JSON.stringify(payload)).then((data) => {
+      Alert.success('Quiz edited', 3000);
+      history.push('/dashboard');
+    })
+  }
+  const handleBackQuiz = () => {
+    history.push('/dashboard');
   }
   return (
     <Container>
-      <Content>
+      <Content width="50vw">
         <FlexboxGrid justify="center" style={{ marginTop: '5em' }}>
           <FlexboxGrid.Item>
-            <Panel header={<h2>Edit Quiz: {name}</h2>} bordered>
-              {thumbnail}
+            <Panel header={<div><h2>Edit Quiz</h2> <h3>{name}</h3></div>} bordered style={{ width: '50vw' }}>
+              <h5>Change thumbnail</h5>
+              <ImageContainer>
+                <img src={thumbnail} style={{ width: '235px', height: '235px' }} alt='thumbnail preview'/>
+              </ImageContainer>
+              <br></br>
+              <Uploader listType="picture" accept="image/png, image/jpeg" fileListVisible={false} onChange={handleAddThumbnail} />
+              <br></br>
               <Button appearance="primary" onClick={handleAddQuestion}>Add Question</Button>
               <List bordered hover>
-                {questions
+                {questions && questions.length
                   ? (
                       questions.map((item, idx) => (
-                        <List.item key={item.id} index={idx}>
-                          <FlexboxGrid>
-                            <FlexboxGrid.Item colspan={2}>
+                        <List.Item key={item.id} index={idx}>
+                          <FlexboxGrid justify='space-between'>
+                            <FlexboxGrid.Item>
                               {item.question}
                             </FlexboxGrid.Item>
                             <FlexboxGrid>
-                              <Button appearance="primary" onClick={e => handleEditQuestion(e)}>Edit Question</Button>
+                              <Button appearance="primary" onClick={() => handleEditQuestion(item.id)}>Edit Question</Button>
                             </FlexboxGrid>
                           </FlexboxGrid>
-                        </List.item>
+                        </List.Item>
                       )))
                   : (
                       <p> this list has no questions</p>
                     )}
               </List>
+              <Button appearance="primary" onClick={handleSaveQuiz}>Save</Button>
+              <Button appearance="subtle" onClick={handleBackQuiz}>Back</Button>
             </Panel>
           </FlexboxGrid.Item>
         </FlexboxGrid>

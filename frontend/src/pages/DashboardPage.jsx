@@ -6,7 +6,7 @@ import {
   Header,
   Sidebar,
   Sidenav,
-  FlexboxGrid
+  FlexboxGrid,
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
 // import styled from 'styled-components';
@@ -105,7 +105,7 @@ export default function DashboardPage () {
       <Header style={{ align: 'center' }}>
         <h2>Welcome to your dashboard</h2>
       </Header>
-      <FlexboxGrid align="top" justify="space-around">
+      <FlexboxGrid align="top" justify="start" style={{ columnGap: '50px', rowGap: '50px' }} >
         {quizzes.map((item, idx) => {
           if (item === null) {
             return <h1> Empty </h1>
