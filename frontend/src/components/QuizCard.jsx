@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import {
   Panel,
   Button,
   Modal,
   Alert,
-  Divider
+  Divider,
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
 import PropTypes from 'prop-types';
@@ -47,13 +47,23 @@ export default function QuizCard ({ QuizId, onDelete }) {
       headers: {
         accept: 'application/json',
         Authorization: 'Bearer ' + token,
-        quizid: id,
       },
     }).then((data) => {
       return data.json();
     });
   }
 
+  const advanceQuestion = (token, id) => {
+    return fetch(new URL(`admin/quiz/${id}/advance`, 'http://localhost:5005'), {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    }).then((data) => {
+      return data.json();
+    });
+  }
   useEffect(() => {
     getQuizInfo(token, QuizId).then((data) => {
       setQuizInfo(data);
@@ -103,7 +113,7 @@ export default function QuizCard ({ QuizId, onDelete }) {
   const [startModal, showStartModal] = useState(false);
   const handleStart = () => {
     if (quizInfo.active) {
-      history.push(`/game/${quizInfo.active}`);
+      showStartModal(true);
     } else {
       startSession(token, QuizId).then(() => {
         getQuizInfo(token, QuizId).then((data) => {
@@ -130,7 +140,17 @@ export default function QuizCard ({ QuizId, onDelete }) {
   }
   const handleCopyLink = () => {
     navigator.clipboard.writeText(`http://localhost:3000/join/${quizInfo.active}`);
-    Alert.info('Copied to clip board', 2000);
+    Alert.success('Link copied to clipboard', 2000);
+  }
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(`${quizInfo.active}`);
+    Alert.success('Code copied to clipboard', 2000);
+  }
+  const handleAdvanceQuestion = () => {
+    advanceQuestion(token, QuizId).then(() => {
+      Alert.success('Advanced to next question', 3000);
+    })
   }
   return (
     <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
@@ -151,17 +171,19 @@ export default function QuizCard ({ QuizId, onDelete }) {
         </OptionsMenu>
       </Panel>
       <Modal backdrop="static" show={startModal} onHide={() => showStartModal(false)} size="xs">
-          <Modal.Header>
+          <Modal.Header style={{ textAlign: 'center' }}>
             <h2>Game Started</h2>
           </Modal.Header>
           <Modal.Body style={{ textAlign: 'center' }}>
-            Session has started, your Session ID is {quizInfo.active}
-            <br></br>
-            Head over to http://localhost:3000/join/{quizInfo.active}
+            Your game has started, your Session ID is<span onClick={handleCopyCode}><h2>{quizInfo.active}</h2></span>
+            <Divider>Game controls</Divider>
+            <Button appearance='primary' color='green' onClick={handleAdvanceQuestion}>Advance to next question</Button>
+            <Divider>to Join</Divider>
+            <p>Click the code above to copy or <Link to={{ pathname: '/join/' + quizInfo.active }}>this</Link> to join the game</p>
             <Divider>Or</Divider>
-            Copy the link below
+            <p>Click the button below to copy the link</p>
           </Modal.Body>
-          <Modal.Footer style={{ textAlign: 'right' }}>
+          <Modal.Footer style={{ textAlign: 'center' }}>
             <Button onClick={handleCopyLink} appearance="primary">Copy link to clipboard</Button>
             <Button onClick={() => showStartModal(false)} appearance="ghost">Back to dashboard</Button>
           </Modal.Footer>

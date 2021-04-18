@@ -23,7 +23,7 @@ const model = Schema.Model({
 
 export default function JoinPage () {
   const SessionId = useParams().SessionId;
-  const [joinForm, setJoinForm] = useState({ code: '', name: '' });
+  const [joinForm, setJoinForm] = useState({ code: SessionId, name: '' });
   const history = useHistory();
   const joinSession = (code, name) => {
     return fetch(new URL(`play/join/${code}`, 'http://localhost:5005/'), {
@@ -34,8 +34,6 @@ export default function JoinPage () {
       body: JSON.stringify({ name: name }),
     }).then((data) => {
       return data.json();
-    }).catch((error) => {
-      Alert.error(error, 3000);
     })
   }
   const handleJoinGame = () => {

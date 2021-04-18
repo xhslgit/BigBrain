@@ -4,8 +4,14 @@
  to return to a "player"
 */
 export const quizQuestionPublicReturn = question => {
-  console.log('See question: ', question);
-  return question.question;
+  // let res = [];
+  // for (const q of question) {
+  //   if(q !== 'answers') {
+  //     res.push(q);
+  //   }
+  // }
+  const res = {question: question.question};
+  return res;
 };
 
 /*
