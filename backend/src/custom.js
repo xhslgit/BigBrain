@@ -4,13 +4,20 @@
  to return to a "player"
 */
 export const quizQuestionPublicReturn = question => {
-  // let res = [];
-  // for (const q of question) {
-  //   if(q !== 'answers') {
-  //     res.push(q);
-  //   }
-  // }
-  const res = {question: question.question};
+  let media = 'none';
+  if (question.mediainput === 'videoinput') {
+    media = question.video;
+  } else if (question.mediainput === 'imageinput') {
+    media = question.image
+  }
+  const res = {
+    id: question.id,
+    question: question.question,
+    media: media,
+    points: question.points,
+    time: question.time,
+    type: question.type
+  };
   return res;
 };
 

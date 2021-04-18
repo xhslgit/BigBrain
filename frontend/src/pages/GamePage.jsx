@@ -3,7 +3,15 @@ import { useParams } from 'react-router-dom';
 
 export default function GamePage () {
   const { SessionId, PlayerId } = useParams();
-  const [question, setQuestion] = useState('');
+  const [question, setQuestion] = useState({
+    id: '',
+    question: '',
+    type: '',
+    points: '',
+    time: '',
+    media: '',
+    isoTimeLastQuestionStarted: ''
+  });
   const [gameStarted, setGameStarted] = useState(false);
   const getQuestion = (id) => {
     return fetch(new URL(`play/${id}/question`, 'http://localhost:5005/'), {
@@ -31,7 +39,11 @@ export default function GamePage () {
       <h1> Gamepage </h1>
       {SessionId}
       {PlayerId}
-      {gameStarted === false ? (<h1>The game has not started, wait for admin to start</h1>) : ({ question })}
+      {!gameStarted
+        ? (<h1>The game has not started, wait for admin to start</h1>)
+        : (
+          <h1>{question.question}</h1>
+          )}
     </div>
   )
 }
