@@ -7,9 +7,9 @@ import {
   Panel,
   ControlLabel,
   FormControl,
-  Button
+  Button,
+  Divider
 } from 'rsuite';
-
 import 'rsuite/dist/styles/rsuite-default.css';
 import useToken from '../utils/useToken';
 const { StringType } = Schema.Types;
@@ -23,27 +23,12 @@ const model = Schema.Model({
     .minLength(3, 'Please enter atleast 3 characters for your password')
 });
 
-function login (email, password) {
-  return fetch(new URL('admin/auth/login', 'http://localhost:5005/'), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email, password }),
-  }).then((data) => {
-    if (data.status === 200) {
-      return data.json();
-    }
-  });
-}
-
 export default function LoginPage () {
   const history = useHistory();
 
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
 
-  const temp = useToken();
-  const setToken = temp.setToken;
+  const setToken = useToken().setToken;
   const handleSubmit = () => {
     login(loginForm.email, loginForm.password).then((data) => {
       console.log('logging in');
@@ -51,6 +36,19 @@ export default function LoginPage () {
       setToken(data.token);
       history.push('/dashboard');
     })
+  }
+  const login = (email, password) => {
+    return fetch(new URL('admin/auth/login', 'http://localhost:5005/'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    }).then((data) => {
+      if (data.status === 200) {
+        return data.json();
+      }
+    });
   }
   return (
     <Panel header={<h3>Login</h3>} shaded>
@@ -73,6 +71,8 @@ export default function LoginPage () {
         <FormGroup>
             <Button appearance="primary" type="submit">Login</Button>
             <Link to="/register">Register here!</Link>
+            <Divider>or</Divider>
+            <Link to="/">Join a game!</Link>
         </FormGroup>
       </Form>
     </Panel>

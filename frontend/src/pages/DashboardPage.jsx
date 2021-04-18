@@ -7,6 +7,7 @@ import {
   Sidebar,
   Sidenav,
   FlexboxGrid,
+  Alert
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
 // import styled from 'styled-components';
@@ -39,10 +40,10 @@ export default function DashboardPage () {
         Authorization: 'Bearer ' + token,
       },
     }).then((data) => {
-      if (data.status === 200) {
-        return data.json();
+      if (data.status !== 200) {
+        Alert.error('Not logged in', 3000);
+        history.push('/login');
       } else {
-        // error handling later
         return data.json();
       }
     });
@@ -54,8 +55,12 @@ export default function DashboardPage () {
 
   const getSetQuizzes = () => {
     getQuizzes(token).then((data) => {
-      const sorted = data.quizzes.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
-      setQuizzes(sorted);
+      if (data) {
+        const sorted = data.quizzes.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+        setQuizzes(sorted);
+      } else {
+        history.push('/login');
+      }
     })
   }
 
@@ -68,6 +73,12 @@ export default function DashboardPage () {
       console.log('logging out');
       setToken('');
       history.push('/login');
+    });
+  }
+  const handleJoinGame = () => {
+    logout(token).then(data => {
+      setToken('');
+      history.push('/');
     });
   }
 
@@ -94,6 +105,9 @@ export default function DashboardPage () {
         <Sidenav.Body>
           <nav>
             <Button appearance="subtle" onClick={toggleShow}>New Game</Button>
+          </nav>
+          <nav>
+            <Button appearance="subtle" onClick={handleJoinGame}>Join a Game</Button>
           </nav>
           <nav>
             <Button appearance="subtle" onClick={handleLogout}>Logout</Button>

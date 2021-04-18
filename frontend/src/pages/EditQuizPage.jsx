@@ -78,15 +78,20 @@ export default function EditQuizPage () {
   const handleEditQuestion = id => {
     history.push(`/dashboard/edit/${QuizId}/${id}`);
   }
+  const handleDeleteQuestion = id => {
+    setQuestions(questions.filter(item => item.id !== id));
+  }
   const handleSaveQuiz = () => {
     const payload = {
       questions: questions,
       name: name,
       thumbnail: thumbnail
     }
-    editQuizInfo(token, QuizId, JSON.stringify(payload)).then((data) => {
-      Alert.success('Quiz edited', 3000);
-      history.push('/dashboard');
+    editQuizInfo(token, QuizId, JSON.stringify(payload)).then(() => {
+      getQuizInfo(token, QuizId).then((data) => {
+        setQuestions(data.questions);
+      })
+      Alert.success('Quiz saved', 3000);
     })
   }
   const handleBackQuiz = () => {
@@ -117,6 +122,7 @@ export default function EditQuizPage () {
                             </FlexboxGrid.Item>
                             <FlexboxGrid>
                               <Button appearance="primary" onClick={() => handleEditQuestion(item.id)}>Edit Question</Button>
+                              <Button appearance="primary" onClick={() => handleDeleteQuestion(item.id)}>Delete Question</Button>
                             </FlexboxGrid>
                           </FlexboxGrid>
                         </List.Item>

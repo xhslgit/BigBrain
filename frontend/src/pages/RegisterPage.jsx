@@ -7,7 +7,8 @@ import {
   Panel,
   ControlLabel,
   FormControl,
-  Button
+  Button,
+  Divider
 } from 'rsuite';
 
 import 'rsuite/dist/styles/rsuite-default.css';
@@ -72,6 +73,8 @@ export default function RegisterPage () {
         <FormGroup>
             <Button appearance="primary" type="submit">Register</Button>
             <Link to="/login">Login here!</Link>
+            <Divider>or</Divider>
+            <Link to="/">Join a game!</Link>
         </FormGroup>
       </Form>
     </Panel>

@@ -146,14 +146,26 @@ export default function EditQuestionPage () {
       const finalQuestion = questionForm;
       finalQuestion.answers = answers;
       getQuizInfo(token, QuizId).then((data) => {
-        const newArr = [...data.questions, finalQuestion];
+        let newQ = 0;
+        let questionsArr = [...data.questions];
+        for (const q of data.questions) {
+          if (q.id === finalQuestion.id) {
+            newQ = 1;
+            questionsArr = (questionsArr.filter(item => item.id !== finalQuestion.id));
+          }
+        }
+        const newArr = [...questionsArr, finalQuestion];
         const payload = {
           questions: newArr,
           name: data.name,
           thumbnail: data.thumbnail
         };
         editQuizInfo(token, QuizId, JSON.stringify(payload)).then((data) => {
-          Alert.success('Question created', 2000);
+          if (newQ) {
+            Alert.success('Question edited', 4000);
+          } else {
+            Alert.success('Question created', 4000);
+          }
           history.push(`/dashboard/edit/${QuizId}`);
         });
       })
