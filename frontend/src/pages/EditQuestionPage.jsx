@@ -76,14 +76,13 @@ export default function EditQuestionPage () {
       return data.json();
     });
   }
-
   useEffect(() => {
     getQuizInfo(token, QuizId).then((data) => {
       for (const q of data.questions) {
         if (q.id === QuestionId) {
           console.log('exists');
-          setTitle('Edit Question');
           setQuestionForm(q);
+          console.log(questionForm);
           setAnswers(q.answers);
           return;
         }
@@ -292,12 +291,12 @@ export default function EditQuestionPage () {
         <FormGroup controlId='points-input'>
           <ControlLabel><h5>How many points is this question worth?</h5></ControlLabel>
           <ControlLabel><p>Max 10 points</p></ControlLabel>
-          <InputNumber defaultValue={1} max={10} min={1} id='points-input' name='points' onChange={handlePointChange} />
+          <InputNumber placeholder={questionForm.points} max={10} min={1} id='points-input' name='points' onChange={handlePointChange} />
         </FormGroup>
         <FormGroup controlId='time-input'>
           <ControlLabel><h5>How long will the player have to answer the question?</h5></ControlLabel>
           <ControlLabel><p>In seconds (max 300s/5mins)</p></ControlLabel>
-          <InputNumber defaultValue={30} max={300} min={3} id='time-input' name='time' onChange={handleTimeChange} />
+          <InputNumber placeholder={questionForm.time} max={300} min={3} id='time-input' name='time' onChange={handleTimeChange} />
         </FormGroup>
         <FormGroup controlId='media-input'>
           <ControlLabel><h5>Optional video or image</h5></ControlLabel>

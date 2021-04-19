@@ -64,13 +64,25 @@ export default function QuizCard ({ QuizId, onDelete }) {
       return data.json();
     });
   }
+
+  const getQuestionStatus = (token, session) => {
+    return fetch(new URL(`admin/session/${session}/status`, 'http://localhost:5005'), {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    }).then((data) => {
+      return data.json();
+    });
+  }
   useEffect(() => {
     getQuizInfo(token, QuizId).then((data) => {
       setQuizInfo(data);
       if (data.questions) {
         let time = 0;
         for (const q of data.questions) {
-          time += q.time;
+          time += Number(q.time);
         }
         setTotalTime(time);
       }
@@ -148,8 +160,16 @@ export default function QuizCard ({ QuizId, onDelete }) {
     Alert.success('Code copied to clipboard', 2000);
   }
   const handleAdvanceQuestion = () => {
-    advanceQuestion(token, QuizId).then(() => {
-      Alert.success('Advanced to next question', 3000);
+    getQuestionStatus(token, quizInfo.active).then((data) => {
+      if (data.error) {
+        Alert.error(data.error, 3000);
+      } else if (data.results.position !== -1 && !data.results.answerAvailable) {
+        Alert.info('Waiting for answer, cant advance yet', 3000);
+      } else {
+        advanceQuestion(token, QuizId).then(() => {
+          Alert.success('Advanced to next question', 3000);
+        })
+      }
     })
   }
   return (

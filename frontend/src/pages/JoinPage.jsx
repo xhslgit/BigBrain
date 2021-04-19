@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import {
   Schema,
@@ -23,7 +23,12 @@ const model = Schema.Model({
 
 export default function JoinPage () {
   const SessionId = useParams().SessionId;
-  const [joinForm, setJoinForm] = useState({ code: SessionId, name: '' });
+  const [joinForm, setJoinForm] = useState({ code: '', name: '' });
+  useEffect(() => {
+    if (SessionId) {
+      setJoinForm({ code: SessionId, name: '' });
+    }
+  }, []);
   const history = useHistory();
   const joinSession = (code, name) => {
     return fetch(new URL(`play/join/${code}`, 'http://localhost:5005/'), {
@@ -58,7 +63,7 @@ export default function JoinPage () {
       >
         <FormGroup controlId='code-input'>
           <ControlLabel>Session code</ControlLabel>
-          <FormControl id='code-input' name='code' value={SessionId}/>
+          <FormControl id='code-input' name='code' defaultValue={SessionId}/>
         </FormGroup>
         <FormGroup controlId='name-input'>
           <ControlLabel>Player Name</ControlLabel>

@@ -10,13 +10,20 @@ export const quizQuestionPublicReturn = question => {
   } else if (question.mediainput === 'imageinput') {
     media = question.image
   }
+  // removes is_correct from answers
+  let pub_ans = [];
+  for (let a of question.answers) {
+    delete a['is_correct'];
+    pub_ans.push(a);
+  }
   const res = {
     id: question.id,
     question: question.question,
     media: media,
     points: question.points,
     time: question.time,
-    type: question.type
+    type: question.type,
+    answers: pub_ans
   };
   return res;
 };
@@ -52,5 +59,5 @@ export const quizQuestionGetAnswers = question => {
  of the question once it starts. (Seconds)
 */
 export const quizQuestionGetDuration = question => {
-  return question.time;
+  return Number(question.time);
 };
