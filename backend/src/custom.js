@@ -8,13 +8,15 @@ export const quizQuestionPublicReturn = question => {
   if (question.mediainput === 'videoinput') {
     media = question.video;
   } else if (question.mediainput === 'imageinput') {
-    media = question.image
+    media = question.image;
   }
-  // removes is_correct from answers
   let pub_ans = [];
-  for (let a of question.answers) {
-    delete a['is_correct'];
-    pub_ans.push(a);
+  for (const a of question.answers) {
+    const temp = {
+      id: a.id,
+      answer: a.answer
+    }
+    pub_ans.push(temp);
   }
   const res = {
     id: question.id,
@@ -39,7 +41,7 @@ export const quizQuestionGetCorrectAnswers = question => {
       correctAns.push(answer.id);
     }
   }
-  return correctAns; // For a single answer
+  return correctAns;
 };
 
 /*

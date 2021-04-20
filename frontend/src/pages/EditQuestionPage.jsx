@@ -53,6 +53,7 @@ export default function EditQuestionPage () {
   });
   const [title, setTitle] = useState('New Question');
   const editQuizInfo = (token, id, payload) => {
+    console.log(payload);
     return fetch(new URL(`admin/quiz/${id}`, 'http://localhost:5005'), {
       method: 'PUT',
       headers: {
@@ -134,6 +135,7 @@ export default function EditQuestionPage () {
   const handleVideoChange = e => {
     const newArr = questionForm;
     newArr.image = '';
+    newArr.video = e;
     setQuestionForm(newArr);
   }
 
@@ -159,7 +161,7 @@ export default function EditQuestionPage () {
           name: data.name,
           thumbnail: data.thumbnail
         };
-        editQuizInfo(token, QuizId, JSON.stringify(payload)).then((data) => {
+        editQuizInfo(token, QuizId, JSON.stringify(payload)).then(() => {
           if (newQ) {
             Alert.success('Question edited', 4000);
           } else {
@@ -321,7 +323,7 @@ export default function EditQuestionPage () {
                 ? (
               <FormGroup controlId='video-input'>
                 <ControlLabel><h5>Optional youtube video link:</h5></ControlLabel>
-                <FormControl id="video-input" name="video" type="string" onChange={handleVideoChange}/>
+                <FormControl id="video-input" name="video" onChange={handleVideoChange}/>
               </FormGroup>)
                 : (
               <FormGroup controlId='image-input'>

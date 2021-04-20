@@ -11,19 +11,13 @@ import 'rsuite/dist/styles/rsuite-default.css';
 import PropTypes from 'prop-types';
 import useToken from '../utils/useToken';
 import styled from 'styled-components';
-
+import { ImageContainer } from '../style';
 const OptionsMenu = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   column-gap: 5px;
   row-gap: 5px;
-`
-const ImageContainer = styled.div`
-  width: 240px;
-  height: 240px;
-  outline: 2px black solid;
-  overflow: hidden;
 `
 export default function QuizCard ({ QuizId, onDelete }) {
   const token = useToken().token;
@@ -164,7 +158,7 @@ export default function QuizCard ({ QuizId, onDelete }) {
       if (data.error) {
         Alert.error(data.error, 3000);
       } else if (data.results.position !== -1 && !data.results.answerAvailable) {
-        Alert.info('Waiting for answer, cant advance yet', 3000);
+        Alert.info('Waiting for question to finish, cant advance yet', 3000);
       } else {
         advanceQuestion(token, QuizId).then(() => {
           Alert.success('Advanced to next question', 3000);
