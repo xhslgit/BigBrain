@@ -6,9 +6,8 @@ import {
 import ReactPlayer from 'react-player'
 import { AllAnswerContainer, AnswerBox } from '../style';
 // TODO
-// display results when timer is up
-// be able to select answers and display what answers are selected
-// answers sent via server whenever answer is selected
+// results page, for 2.4.3 and 2.3.3
+// fix styling and formating for all pages
 export default function GamePage () {
   const useInterval = (callback, delay) => {
     const savedCallback = useRef();
