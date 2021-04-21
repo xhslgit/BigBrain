@@ -80,35 +80,25 @@ export default function GamePage () {
       return data.json();
     })
   }
-  // const getFinalResults = id => {
-  //   return fetch(new URL(`play/${id}/results`, 'http://localhost:5005/'), {
-  //     method: 'GET',
-  //     headers: {
-  //       accept: 'application/json',
-  //     }
-  //   }).then((data) => {
-  //     return data.json();
-  //   })
-  // }
+  const getFinalResults = id => {
+    return fetch(new URL(`play/${id}/results`, 'http://localhost:5005/'), {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+      }
+    }).then((data) => {
+      return data.json();
+    })
+  }
   const [timer, setTimer] = useState(null);
   const calcTimer = (totalTime, time) => {
     const diff = Date.now() - Date.parse(time);
     setTimer(totalTime - Math.floor(diff / 1000));
   }
-  // const [finalResults, setFinalResults] = useState([]);
   useInterval(async () => {
     const [questionData] = await Promise.all([getQuestion(PlayerId)]);
     if (questionData.error) {
       if (questionData.error === 'Session ID is not an active session') {
-        // if (!gameEnded) {
-        //   getFinalResults(PlayerId).then((data) => {
-        //     const newArr = [];
-        //     for (const q of data) {
-        //       newArr.push(q.correct);
-        //     }
-        //     setFinalResults(newArr);
-        //   })
-        // }
         setGameEnded(true);
       } else {
         setGameEnded(false);
@@ -130,17 +120,38 @@ export default function GamePage () {
       setTimesUp(false);
     }
   }, [timer])
+
+  const [finalResults, setFinalResults] = useState([]);
+  useEffect(() => {
+    if (gameEnded === true) {
+      getFinalResults(PlayerId).then((data) => {
+        const resultsArr = [];
+        let idx = 0;
+        for (const res of data) {
+          console.log(res);
+          const diff = Date.parse(res.answeredAt) - Date.parse(res.questionStartedAt);
+          const payload = {
+            question: idx,
+            timeTaken: Math.floor(diff / 1000),
+            result: res.correct,
+          }
+          resultsArr.push(payload);
+          idx++;
+        }
+        setFinalResults(resultsArr);
+      })
+    }
+  }, [gameEnded])
   const [timesUp, setTimesUp] = useState(false);
   const [correctAnswers, setCorrectAnswers] = useState([]);
   const [displayCorrectAnswers, setDisplayCorrectAnswers] = useState([]);
   const handleResultsScreen = () => {
-    console.log('correct ', correctAnswers);
     const newArr = [];
     if (question.answers) {
       for (const answer of question.answers) {
         if (correctAnswers) {
           if (correctAnswers.some(e => e === answer.id)) {
-            newArr.push(answer.answer);
+            newArr.push({ id: answer.id, answer: answer.answer });
           }
         }
       }
@@ -150,10 +161,10 @@ export default function GamePage () {
   }
   const handleTimesUp = () => {
     setTimesUp(true);
-    handleResultsScreen();
     getCorrectAnswer(PlayerId).then((data) => {
       setCorrectAnswers(data.answerIds);
     })
+    handleResultsScreen();
   }
   useEffect(() => {
     setSelectedAnswers([]);
@@ -193,9 +204,7 @@ export default function GamePage () {
         setSelectedAnswers(newArr);
       }
     }
-    updateAnswer(PlayerId, answerIds).then(() => {
-      console.log('updated answers', answerIds);
-    })
+    updateAnswer(PlayerId, answerIds);
   }
   return (
     <Panel bordered shaded>
@@ -242,18 +251,23 @@ export default function GamePage () {
                 </div>)
               : (
                 <div>
-                  <h1> Correct answer: {displayCorrectAnswers.map((item) => (<p key={item}>{item}</p>))}</h1>
+                  <h1>
+                  {displayCorrectAnswers.length > 1 ? 'Correct answers:' : 'Correct answer:'}
+                  </h1>
+                  {displayCorrectAnswers.map((item) => (<h2 style={{ display: 'inline' }}key={item.id}>- {item.answer}<br></br></h2>))}
                   <h3>Waiting for admin to continue to next question</h3>
                 </div>
                 )}
             </Panel>)
         : (<div>
             <h1>game ended results</h1>
-            {/* {finalResults.map((item) => (
-              <div key={item}>
-                <h1>Question 1</h1>
+            {finalResults.map((item, idx) => (
+              <div key={item.question}>
+                <h3>Question {idx + 1}</h3>
+                <p>{item.result ? 'Correct!' : 'Incorrect!'}</p>
+                <p>Took you {item.timeTaken} seconds to answer</p>
               </div>
-            ))} */}
+            ))}
           </div>)}
     </Panel>
   )
