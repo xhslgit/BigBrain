@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import {
   FlexboxGrid,
-  Panel,
-  Container,
-  Content,
   Button,
   List,
   Uploader,
@@ -14,14 +11,8 @@ import {
 import 'rsuite/dist/styles/rsuite-default.css';
 import { fileToDataUrl } from '../utils/helpers';
 import useToken from '../utils/useToken';
-import styled from 'styled-components';
+import { GlobalStyle, QuizEditPanel, ImageContainer } from '../style';
 
-const ImageContainer = styled.div`
-  width: 240px;
-  height: 240px;
-  border: 1px black solid;
-  overflow: hidden;
-`
 export default function EditQuizPage () {
   const QuizId = useParams().QuizId;
   const token = useToken().token;
@@ -98,45 +89,46 @@ export default function EditQuizPage () {
     history.push('/dashboard');
   }
   return (
-    <Container>
-      <Content width="50vw">
-        <FlexboxGrid justify="center" style={{ marginTop: '5em' }}>
-          <FlexboxGrid.Item>
-            <Panel header={<div><h2>Edit Quiz</h2> <h3>{name}</h3></div>} bordered style={{ width: '50vw' }}>
-              <h5>Change thumbnail</h5>
-              <ImageContainer>
-                <img src={thumbnail} style={{ width: '235px', height: '235px' }} alt='thumbnail preview'/>
-              </ImageContainer>
-              <br></br>
-              <Uploader listType="picture" accept="image/png, image/jpeg" fileListVisible={false} onChange={handleAddThumbnail} />
-              <br></br>
-              <Button appearance="primary" onClick={handleAddQuestion}>Add Question</Button>
-              <List bordered hover>
-                {questions && questions.length
-                  ? (
-                      questions.map((item, idx) => (
-                        <List.Item key={item.id} index={idx}>
-                          <FlexboxGrid justify='space-between'>
-                            <FlexboxGrid.Item>
-                              {item.question}
-                            </FlexboxGrid.Item>
-                            <FlexboxGrid>
-                              <Button appearance="primary" onClick={() => handleEditQuestion(item.id)}>Edit Question</Button>
-                              <Button appearance="primary" onClick={() => handleDeleteQuestion(item.id)}>Delete Question</Button>
-                            </FlexboxGrid>
-                          </FlexboxGrid>
-                        </List.Item>
-                      )))
-                  : (
-                      <p> this list has no questions</p>
-                    )}
-              </List>
-              <Button appearance="primary" onClick={handleSaveQuiz}>Save</Button>
-              <Button appearance="subtle" onClick={handleBackQuiz}>Back</Button>
-            </Panel>
-          </FlexboxGrid.Item>
-        </FlexboxGrid>
-      </Content>
-    </Container>
+    <Fragment>
+      <GlobalStyle />
+        <QuizEditPanel bordered>
+          <h2 style={{ color: 'black' }} >Edit Quiz</h2>
+          <h3>{name}</h3>
+          <ImageContainer style={{ margin: 'auto' }}>
+            <img src={thumbnail} style={{ width: '235px', height: '235px' }} alt='thumbnail preview'/>
+          </ImageContainer>
+          <br></br>
+          <h5 style={{ color: 'black' }}>Upload thumbnail</h5>
+          <Uploader listType="picture" accept="image/png, image/jpeg" fileListVisible={false} onChange={handleAddThumbnail} />
+          <br></br>
+          <Button appearance="primary" onClick={handleAddQuestion}>Add Question</Button>
+          <br></br>
+          <br></br>
+          <List bordered hover>
+            {questions && questions.length
+              ? (
+                  questions.map((item, idx) => (
+                    <List.Item key={item.id} index={idx}>
+                      <FlexboxGrid justify='space-between'>
+                        <FlexboxGrid.Item >
+                          <h4>{item.question}</h4>
+                        </FlexboxGrid.Item>
+                        <FlexboxGrid>
+                          <Button style={{ margin: 'auto 3px' }} appearance="primary" onClick={() => handleEditQuestion(item.id)}>Edit Question</Button>
+                          <Button style={{ margin: 'auto 3px' }} appearance="primary" onClick={() => handleDeleteQuestion(item.id)}>Delete Question</Button>
+                        </FlexboxGrid>
+                      </FlexboxGrid>
+                    </List.Item>
+                  )))
+              : (
+                  <h2>No questions has been added</h2>
+                )}
+          </List>
+          <br></br>
+          <p><i>Must click save to save any changes</i></p>
+          <Button style={{ margin: '10px', marginTop: '0' }} appearance="primary" onClick={handleSaveQuiz}>Save</Button>
+          <Button style={{ margin: '10px', marginTop: '0' }} appearance="ghost" onClick={handleBackQuiz}>Back</Button>
+        </QuizEditPanel>
+    </Fragment>
   );
 }

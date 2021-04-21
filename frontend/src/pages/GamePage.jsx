@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import {
   Panel, Divider, Alert, Button
 } from 'rsuite';
 import ReactPlayer from 'react-player'
-import { AllAnswerContainer, AnswerBox } from '../style';
-// TODO
-// results page, for 2.4.3 and 2.3.3
-// fix styling and formating for all pages
+import { AllAnswerContainer, AnswerBox, GamePagePanel, GlobalStyle } from '../style';
+
 export default function GamePage () {
   const history = useHistory();
   const useInterval = (callback, delay) => {
@@ -171,7 +169,7 @@ export default function GamePage () {
     setSelectedAnswers([]);
   }, [question.question]);
 
-  const colours = ['orange', 'peru', 'violet', 'cyan', 'indigo', 'cream'];
+  const colours = ['orange', 'peru', 'violet', 'cyan', 'indigo', 'blue'];
   const handleAnswerClicked = (id, answer) => {
     // console.log(id, answer);
     let answerIds = [];
@@ -208,67 +206,74 @@ export default function GamePage () {
     updateAnswer(PlayerId, answerIds);
   }
   return (
-    <Panel bordered shaded>
-      <h1> In Game Session {SessionId} </h1>
-      {!gameEnded
-        ? !gameStarted
-            ? (<h1>The game has not been started, wait for admin to start</h1>)
-            : (
-          <Panel bordered>
-            <h1>Question: {question.question}</h1>
-            <h2>Points: {question.points}</h2>
-            {!timesUp
-              ? (
-                <div>
-                  <h3>Time remaining: {timer}</h3>
-                    {media === 'none'
-                      ? (
-                      <div>
-                        <Divider></Divider>
-                      </div>
-                        )
-                      : (
-                        <div>
-                          {media.startsWith('data:image')
-                            ? (
-                              <img src={media} />)
-                            : (
-                              <ReactPlayer url={media} />
-                              )}
-                        </div>)
-                    }
-                    <h4> Selected answers: {selectedAnswers.map((item, idx) => (
-                      <p key={item.id} style={{ display: 'inline' }}>{item.answer} </p>
-                    ))} </h4>
-                    <AllAnswerContainer>
-                    {answers.map((item, idx) => (
-                      <AnswerBox colour={colours[idx]} key={item.id} selected={selectedAnswers.some(e => e.id === item.id)}onClick={() => { handleAnswerClicked(item.id, item.answer) }}>
-                        {item.answer}
-                      </AnswerBox>
-                    ))}
-                    </AllAnswerContainer>)
-                </div>)
+    <Fragment>
+      <GlobalStyle/>
+      <GamePagePanel bordered shaded>
+        <h1> In Game Session {SessionId} </h1>
+        {!gameEnded
+          ? !gameStarted
+              ? (<h3>The guiz has not yet begun, wait for admin to start the quiz</h3>)
               : (
-                <div>
-                  <h1>
-                  {displayCorrectAnswers.length > 1 ? 'Correct answers:' : 'Correct answer:'}
-                  </h1>
-                  {displayCorrectAnswers.map((item) => (<h2 style={{ display: 'inline' }}key={item.id}>- {item.answer}<br></br></h2>))}
-                  <h3>Waiting for admin to continue to next question</h3>
+            <Panel bordered>
+              <h2>Question: {question.question}</h2>
+              <h3><u>Points: {question.points}</u></h3>
+              {!timesUp
+                ? (
+                  <div>
+                    <h3>Time remaining: {timer}</h3>
+                      {media === 'none'
+                        ? (
+                        <div>
+                          <Divider></Divider>
+                        </div>
+                          )
+                        : (
+                          <div>
+                            {media.startsWith('data:image')
+                              ? (
+                                <img src={media} />)
+                              : (
+                                <ReactPlayer url={media} />
+                                )}
+                          </div>)
+                      }
+                      <h4> Answers that have been selected: {selectedAnswers.map((item, idx) => (
+                        <p key={item.id} style={{ display: 'inline' }}><br></br>{item.answer}</p>
+                      ))} </h4>
+                      <br></br>
+                      <AllAnswerContainer>
+                      {answers.map((item, idx) => (
+                        <AnswerBox colour={colours[idx]} key={item.id} selected={selectedAnswers.some(e => e.id === item.id)}onClick={() => { handleAnswerClicked(item.id, item.answer) }}>
+                          {item.answer}
+                        </AnswerBox>
+                      ))}
+                      </AllAnswerContainer>
+                  </div>)
+                : (
+                  <div>
+                    <h2>
+                    {displayCorrectAnswers.length > 1 ? 'The correct answers were:' : 'The correct answer was:'}
+                    </h2>
+                    {displayCorrectAnswers.map((item) => (<h2 style={{ display: 'inline' }}key={item.id}>{item.answer}<br></br></h2>))}
+                    <br></br>
+                    <br></br>
+                    <h4>Waiting for admin to continue to next question</h4>
+                  </div>
+                  )}
+              </Panel>)
+          : (<div>
+              <h2>Your game has ended, here are your results!</h2>
+              {finalResults.map((item, idx) => (
+                <div key={item.question}>
+                  <h2>Question {idx + 1}</h2>
+                  <h3>{item.result ? <u>Correct!</u> : <u>Incorrect!</u>}</h3>
+                  <h4>This question took you <u>{item.timeTaken}</u> seconds to answer</h4>
                 </div>
-                )}
-            </Panel>)
-        : (<div>
-            <h1>Your game has ended, here are your results!</h1>
-            {finalResults.map((item, idx) => (
-              <div key={item.question}>
-                <h2>Question {idx + 1}</h2>
-                <h3>{item.result ? 'Correct!' : 'Incorrect!'}</h3>
-                <h4>Took you {item.timeTaken} seconds to answer</h4>
-              </div>
-            ))}
-            <Button onClick={() => history.push('/join')}>Join another game!</Button>
-          </div>)}
-    </Panel>
+              ))}
+              <br></br>
+              <Button appearance='ghost' color='green' onClick={() => history.push('/join')}>Join another game!</Button>
+            </div>)}
+      </GamePagePanel>
+    </Fragment>
   )
 }

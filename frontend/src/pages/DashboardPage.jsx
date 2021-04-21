@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  Button,
   Container,
   Header,
-  Sidebar,
-  Sidenav,
-  FlexboxGrid,
   Alert
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
@@ -14,6 +10,7 @@ import 'rsuite/dist/styles/rsuite-default.css';
 import useToken from '../utils/useToken';
 import QuizCard from '../components/QuizCard';
 import NewGameModal from '../components/NewGameModal';
+import { LogoutButton, NewGameButton, QuizCardGrid, JoinGameButton, GlobalStyle } from '../style';
 
 export default function DashboardPage () {
   const logout = (token) => {
@@ -82,61 +79,40 @@ export default function DashboardPage () {
     });
   }
 
-  const headerStyle = {
-    padding: 18,
-    fontSize: 16,
-    height: 56,
-    background: '#34c3ff',
-    color: ' #fff',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden'
-  };
   const [showModal, setShowModal] = useState(false);
   const toggleShow = () => {
     setShowModal(!showModal);
   }
   return (
-  <Container styles={{ height: '100%' }}>
-    <Sidebar>
-      <Sidenav activeKey="1">
-        <Sidenav.Header>
-          <div style={headerStyle}>BigBrain</div>
-        </Sidenav.Header>
-        <Sidenav.Body>
-          <nav>
-            <Button appearance="subtle" onClick={toggleShow}>New Game</Button>
-          </nav>
-          <nav>
-            <Button appearance="subtle" onClick={handleJoinGame}>Join a Game</Button>
-          </nav>
-          <nav>
-            <Button appearance="subtle" onClick={handleLogout}>Logout</Button>
-          </nav>
-        </Sidenav.Body>
-      </Sidenav>
-    </Sidebar>
-    <Container>
-      <Header style={{ align: 'center' }}>
-        <h2>Welcome to your dashboard</h2>
-      </Header>
-      <FlexboxGrid align="top" justify="start" style={{ columnGap: '50px', rowGap: '50px' }} >
-        {quizzes.map((item, idx) => {
-          if (item === null) {
-            return <h1> Empty </h1>
-          }
-          return <QuizCard
-            key={item.id}
-            QuizId={item.id}
-            onDelete={getSetQuizzes}
+    <Fragment>
+      <GlobalStyle />
+        <NewGameButton appearance="primary" onClick={toggleShow}>New Game</NewGameButton>
+        <LogoutButton appearance="primary" onClick={handleLogout}>Logout</LogoutButton>
+        <JoinGameButton appearance="primary" onClick={handleJoinGame}>Join a Game</JoinGameButton>
+        <Container>
+          <Header style={{ textAlign: 'center' }}>
+            <h1>BigBrain</h1>
+            <h2>Welcome to your dashboard</h2>
+          </Header>
+          <QuizCardGrid align="top" justify="start" >
+            {quizzes.map((item, idx) => (
+              item
+                ? (
+                  <QuizCard
+                    key={item.id}
+                    QuizId={item.id}
+                    onDelete={getSetQuizzes}/>)
+                : (
+                  <h1> Empty </h1>
+                  )
+            ))}
+          </QuizCardGrid>
+          <NewGameModal
+            showModal={showModal}
+            onHide={toggleShow}
+            onCreate={getSetQuizzes}
           />
-        })}
-      </FlexboxGrid>
-      <NewGameModal
-        showModal={showModal}
-        onHide={toggleShow}
-        onCreate={getSetQuizzes}
-      />
-    </Container>
-  </Container>
+        </Container>
+    </Fragment>
   )
 }

@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import useToken from '../utils/useToken';
 import QuestionBarGraph from '../components/QuestionBarGraph';
 import { List, FlexboxGrid, Button } from 'rsuite';
+import { GlobalStyle, GameResultsPanel } from '../style';
+
 export default function DashboardResultsPage () {
   const SessionId = useParams().SessionId;
   const token = useToken().token;
@@ -67,28 +69,32 @@ export default function DashboardResultsPage () {
     })
   }, [])
   return (
-    <div>
-      <h1>Here are your results for session {SessionId}!</h1>
-      <h2>Top 5 players!</h2>
-      <List>
-        {playersData.map((item, idx) => (
-          <List.Item key={idx}>
-            <FlexboxGrid justify="space-between">
-              <FlexboxGrid.Item>
-                <h4><b>{idx + 1}.</b> {item.name}</h4>
-              </FlexboxGrid.Item>
-              <FlexboxGrid.Item>
-                <h4>{item.score} points</h4>
-              </FlexboxGrid.Item>
-            </FlexboxGrid>
-          </List.Item>
-        ))}
-      </List>
-      <h2>See each questions results!</h2>
-      <div height='100%' width='100%'>
-        {questionData.length !== 0 ? <QuestionBarGraph data={questionData} /> : 'loading graph'}
-      </div>
-      <Button onClick={() => history.push('/dashboard')}>Back to Dashboard</Button>
-    </div>
+    <Fragment>
+      <GlobalStyle />
+      <GameResultsPanel shaded bordered>
+        <h1>Here are your results for session {SessionId}!</h1>
+        <h2>Top 5 players!</h2>
+        <br></br>
+        <List bordered>
+          {playersData.map((item, idx) => (
+            <List.Item key={idx}>
+              <FlexboxGrid justify="space-between">
+                <FlexboxGrid.Item>
+                  <h4><b>{idx + 1}.</b> {item.name}</h4>
+                </FlexboxGrid.Item>
+                <FlexboxGrid.Item>
+                  <h4>{item.score} points</h4>
+                </FlexboxGrid.Item>
+              </FlexboxGrid>
+            </List.Item>
+          ))}
+        </List>
+        <h2>See each questions results!</h2>
+        <div style={{ width: '500px', margin: 'auto' }}>
+          {questionData.length !== 0 ? <QuestionBarGraph data={questionData} /> : 'loading graph'}
+        </div>
+        <Button appearance='ghost' color='green' onClick={() => history.push('/dashboard')}>Back to Dashboard</Button>
+      </GameResultsPanel>
+    </Fragment>
   )
 }

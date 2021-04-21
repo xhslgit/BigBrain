@@ -6,11 +6,11 @@ import {
   FormGroup,
   FormControl,
   ControlLabel,
-  Button,
   Alert,
+  Button
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
-import { RegPanel } from '../style';
+import { MainPageContainer, RegPanel } from '../style';
 const { StringType } = Schema.Types;
 
 const model = Schema.Model({
@@ -52,29 +52,31 @@ export default function JoinPage () {
   }
 
   return (
-    <RegPanel header={<h2>BigBrain</h2>} shaded>
-      <h2>Join a game</h2>
-      <Form
-        model = {model}
-        fluid
-        layout = 'vertical'
-        onSubmit = {handleJoinGame}
-        formValue = {joinForm}
-        onChange = {newValue => setJoinForm(newValue)}
-      >
-        <FormGroup controlId='code-input'>
-          <ControlLabel>Session code</ControlLabel>
-          <FormControl id='code-input' name='code' defaultValue={SessionId}/>
-        </FormGroup>
-        <FormGroup controlId='name-input'>
-          <ControlLabel>Player Name</ControlLabel>
-          <FormControl id='name-input' name='name' />
-        </FormGroup>
-        <FormGroup>
-            <Button appearance="primary" type="submit">Join the Game!</Button>
-            <Button appearance="ghost" onClick={() => history.push('/login')}>Create a game here!</Button>
-        </FormGroup>
-      </Form>
-    </RegPanel>
+    <MainPageContainer>
+      <RegPanel header={<h2>BigBrain</h2>} shaded>
+        <h2>Join a game here!</h2>
+        <Form
+          model = {model}
+          fluid
+          layout = 'vertical'
+          onSubmit = {handleJoinGame}
+          formValue = {joinForm}
+          onChange = {newValue => setJoinForm(newValue)}
+        >
+          <FormGroup controlId='code-input'>
+            <ControlLabel><h4>Session Code:</h4></ControlLabel>
+            <FormControl id='code-input' name='code' defaultValue={SessionId}/>
+          </FormGroup>
+          <FormGroup controlId='name-input'>
+            <ControlLabel><h4>Choose your name:</h4></ControlLabel>
+            <FormControl id='name-input' name='name' />
+          </FormGroup>
+          <FormGroup >
+              <Button style={{ margin: '10px' }} appearance="primary" type="submit">Join the Game!</Button>
+              <Button style={{ margin: '10px' }} appearance="ghost" onClick={() => history.push('/login')}>Create a game here!</Button>
+          </FormGroup>
+        </Form>
+      </RegPanel>
+    </MainPageContainer>
   )
 }

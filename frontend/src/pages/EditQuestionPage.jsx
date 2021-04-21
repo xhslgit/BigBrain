@@ -7,7 +7,6 @@ import {
   Schema,
   ControlLabel,
   FormControl,
-  Panel,
   RadioGroup,
   Radio,
   InputNumber,
@@ -22,11 +21,13 @@ import {
 import 'rsuite/dist/styles/rsuite-default.css';
 import { fileToDataUrl, matchYoutubeUrl } from '../utils/helpers';
 import useToken from '../utils/useToken';
+import { QuestionEditPanel, ImageContainer } from '../style';
 const { StringType, NumberType } = Schema.Types;
 
 export default function EditQuestionPage () {
   const model = Schema.Model({
-    question: StringType().isRequired('What is your question?'),
+    question: StringType().isRequired('What is your question?')
+      .maxLength(100, 'Max 100 characters for a question'),
     type: StringType().isRequired('What type is your question?'),
     points: NumberType()
       .isInteger('Please enter an integer')
@@ -222,7 +223,7 @@ export default function EditQuestionPage () {
     if (questionForm.mediatype === 'imageinput' && questionForm.image === '') throw new Error('Please try to upload image again');
   }
   const handleNewAnswer = () => {
-    if (answers.length <= 6) {
+    if (answers.length < 6) {
       setAnswers([...answers, newAnswer()]);
     } else {
       Alert.warning('Max 6 answers for a question');
@@ -250,7 +251,7 @@ export default function EditQuestionPage () {
     }
   }
   return (
-    <Panel shaded header={<h1>{title}</h1>}>
+    <QuestionEditPanel shaded header={<h1 style={{ textAlign: 'center' }}>{title}</h1>}>
       <Form
         model = {model}
         fluid
@@ -273,13 +274,15 @@ export default function EditQuestionPage () {
         <FormGroup>
           <ControlLabel><h5>What are the answers?</h5></ControlLabel>
           <Button appearance="primary" onClick={handleNewAnswer}>New Answer</Button>
+          <br></br>
+          <br></br>
           <List bordered hover>
             {answers.map((item, idx) => (
               <List.Item key={item.id} index={idx}>
                 <FlexboxGrid justify="space-between">
                   <FlexboxGrid.Item>
                   <h5>Answer:</h5>
-                    <Input placeholder={item.answer} onChange={e => handleEditAnswer(e, item.id)} style={{ width: '50vw' }} />
+                    <Input placeholder={item.answer} onChange={e => handleEditAnswer(e, item.id)} style={{ maxWidth: '300%' }} />
                   </FlexboxGrid.Item>
                   <FlexboxGrid.Item>
                     <Toggle size ="lg" checkedChildren="Correct" unCheckedChildren="Incorrect" defaultChecked={item.is_correct} onChange={e => handleCorrectAnswerChange(e, item.id)}/>
@@ -303,7 +306,7 @@ export default function EditQuestionPage () {
         <FormGroup controlId='media-input'>
           <ControlLabel><h5>Optional video or image</h5></ControlLabel>
           <ControlLabel><p>The video or the image will be displayed during the question</p></ControlLabel>
-          <RadioGroup id='media-input' name='media' inline defaultValue={'noneinput'} onChange={handleMediaChange}>
+          <RadioGroup id='media-input' name='media' inline defaultValue={questionForm.mediainput} onChange={handleMediaChange}>
             <Radio value='noneinput' name='noneinput'>None</Radio>
             <Radio value='videoinput' name='videoinput'>Video</Radio>
             <Radio value='imageinput' name='imageinput '>Image</Radio>
@@ -329,6 +332,9 @@ export default function EditQuestionPage () {
               <FormGroup controlId='image-input'>
                 <ControlLabel><h5>Optional image upload:</h5></ControlLabel>
                 <Uploader listType="picture" accept="image/png, image/jpeg" fileListVisible={false} onChange={handleImageChange} />
+                <ImageContainer >
+                  <img src={questionForm.image} style={{ width: '235px', height: '235px' }} alt='Image preview, reduced size  '/>
+                </ImageContainer>
               </FormGroup>))
         }
         <FormGroup>
@@ -338,6 +344,6 @@ export default function EditQuestionPage () {
           </Link>
         </FormGroup>
       </Form>
-    </Panel>
+    </QuestionEditPanel>
   )
 }

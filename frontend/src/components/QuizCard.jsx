@@ -10,15 +10,8 @@ import {
 import 'rsuite/dist/styles/rsuite-default.css';
 import PropTypes from 'prop-types';
 import useToken from '../utils/useToken';
-import styled from 'styled-components';
-import { ImageContainer } from '../style';
-const OptionsMenu = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  column-gap: 5px;
-  row-gap: 5px;
-`
+import { ImageContainer, QuizCardPanel, OptionsMenu } from '../style';
+
 export default function QuizCard ({ QuizId, onDelete }) {
   const token = useToken().token;
   const [quizInfo, setQuizInfo] = useState({});
@@ -167,20 +160,21 @@ export default function QuizCard ({ QuizId, onDelete }) {
     })
   }
   return (
-    <Panel shaded bordered bodyFill style={{ display: 'inline-block', width: 240 }}>
+    <QuizCardPanel shaded bordered bodyFill >
       <ImageContainer>
         <img src={quizInfo.thumbnail} height="235px" width="235px" alt="thumbnail preview" />
       </ImageContainer>
-      <Panel header={quizInfo.name}>
+      <Panel style={{ textAlign: 'center' }}>
+        <h4 style={{ color: 'black' }}>{quizInfo.name}</h4>
         {quizInfo.questions && quizInfo.questions.length
-          ? <p>Total questions: {quizInfo.questions.length}<br></br>Total duration of quiz: {totalTime}s</p>
-          : <p>No questions added yet</p>
+          ? <p>{quizInfo.questions.length} Questions total<br></br>Quiz duration: {totalTime}s</p>
+          : <p><u>No questions added yet</u></p>
         }
-        <p>Created by: {quizInfo.owner}</p>
+        <p>Quiz created by: <b>{quizInfo.owner}</b></p>
+        <Button appearance="primary" onClick={handleStart}>{!quizInfo.active ? 'Start session' : 'View session'}</Button>
         <OptionsMenu>
-          <Button appearance="primary" onClick={handleStart}>{!quizInfo.active ? 'Start session' : 'View session'}</Button>
-          <Button appearance="ghost" color="red" onClick={handleStop}>Stop</Button>
           <Button appearance="primary" onClick={handleEdit}>Edit</Button>
+          <Button appearance="ghost" color="red" onClick={handleStop}>Stop</Button>
           <Button appearance="primary" color="red" onClick={handleDelete}>Delete</Button>
         </OptionsMenu>
       </Panel>
@@ -217,7 +211,7 @@ export default function QuizCard ({ QuizId, onDelete }) {
             <Button onClick={() => showResultsModal(false)} appearance="ghost">Back to dashboard</Button>
           </Modal.Footer>
         </Modal>
-    </Panel>
+    </QuizCardPanel>
   )
 }
 

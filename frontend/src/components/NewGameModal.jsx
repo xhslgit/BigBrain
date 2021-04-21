@@ -48,12 +48,12 @@ export default function NewGameModal ({ showModal, onHide, onCreate }) {
   }
 
   return (
-    <Modal backdrop={true} show={showModal} onHide={onHide}>
+    <Modal backdrop={true} show={showModal} onHide={onHide} style={{ textAlign: 'center' }}>
       <Modal.Header>
-        <Modal.Title>Create a new quiz</Modal.Title>
+        <Modal.Title><h2>Create a new quiz</h2></Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Input placeholder='New quiz name' onChange={e => setGameName(e)} />
+        <Input placeholder='Enter quiz name' onChange={e => setGameName(e)} />
       </Modal.Body>
       <Modal.Footer>
         <Button
