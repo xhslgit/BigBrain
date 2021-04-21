@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import {
-  Panel, Divider, Alert
+  Panel, Divider, Alert, Button
 } from 'rsuite';
 import ReactPlayer from 'react-player'
 import { AllAnswerContainer, AnswerBox } from '../style';
@@ -9,6 +9,7 @@ import { AllAnswerContainer, AnswerBox } from '../style';
 // results page, for 2.4.3 and 2.3.3
 // fix styling and formating for all pages
 export default function GamePage () {
+  const history = useHistory();
   const useInterval = (callback, delay) => {
     const savedCallback = useRef();
     useEffect(() => {
@@ -208,9 +209,7 @@ export default function GamePage () {
   }
   return (
     <Panel bordered shaded>
-      <h1> Gamepage </h1>
-      {SessionId}
-      {PlayerId}
+      <h1> In Game Session {SessionId} </h1>
       {!gameEnded
         ? !gameStarted
             ? (<h1>The game has not been started, wait for admin to start</h1>)
@@ -260,14 +259,15 @@ export default function GamePage () {
                 )}
             </Panel>)
         : (<div>
-            <h1>game ended results</h1>
+            <h1>Your game has ended, here are your results!</h1>
             {finalResults.map((item, idx) => (
               <div key={item.question}>
-                <h3>Question {idx + 1}</h3>
-                <p>{item.result ? 'Correct!' : 'Incorrect!'}</p>
-                <p>Took you {item.timeTaken} seconds to answer</p>
+                <h2>Question {idx + 1}</h2>
+                <h3>{item.result ? 'Correct!' : 'Incorrect!'}</h3>
+                <h4>Took you {item.timeTaken} seconds to answer</h4>
               </div>
             ))}
+            <Button onClick={() => history.push('/join')}>Join another game!</Button>
           </div>)}
     </Panel>
   )

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import {
   Schema,
-  Panel,
   Form,
   FormGroup,
   FormControl,
@@ -11,6 +10,7 @@ import {
   Alert,
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
+import { RegPanel } from '../style';
 const { StringType } = Schema.Types;
 
 const model = Schema.Model({
@@ -52,7 +52,8 @@ export default function JoinPage () {
   }
 
   return (
-    <Panel header={<h2>Join a game</h2>} shaded>
+    <RegPanel header={<h2>BigBrain</h2>} shaded>
+      <h2>Join a game</h2>
       <Form
         model = {model}
         fluid
@@ -74,6 +75,6 @@ export default function JoinPage () {
             <Button appearance="ghost" onClick={() => history.push('/login')}>Create a game here!</Button>
         </FormGroup>
       </Form>
-    </Panel>
+    </RegPanel>
   )
 }
