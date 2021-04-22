@@ -129,7 +129,6 @@ export default function GamePage () {
         const resultsArr = [];
         let idx = 0;
         for (const res of data) {
-          console.log(res);
           const diff = Date.parse(res.answeredAt) - Date.parse(res.questionStartedAt);
           const payload = {
             question: idx,
@@ -140,7 +139,7 @@ export default function GamePage () {
           idx++;
         }
         setFinalResults(resultsArr);
-      })
+      });
     }
   }, [gameEnded])
   const [timesUp, setTimesUp] = useState(false);
@@ -157,7 +156,6 @@ export default function GamePage () {
         }
       }
     }
-
     setDisplayCorrectAnswers(newArr);
   }
   const handleTimesUp = () => {
@@ -172,16 +170,15 @@ export default function GamePage () {
   }, [question.question]);
 
   const colours = ['orange', 'peru', 'violet', 'cyan', 'indigo', 'blue'];
+  // This function doesnt allow the player to select the same answer again,
+  // or if the player has already selected one, the player cannot unselect it if he has only one answer selected
   const handleAnswerClicked = (id, answer) => {
-    // console.log(id, answer);
     let answerIds = [];
-    // if single
     if (answerType === 'single') {
-      // if single and selecting same answer, error
       if (selectedAnswers.some(e => e.id === id)) {
         Alert.error('Must have one answer selected, select another answer to change');
         answerIds = [id];
-      } else { // single and select another answer, replace selectedanswers
+      } else {
         setSelectedAnswers([{ id: id, answer: answer }]);
         answerIds = [id];
       }
@@ -205,7 +202,11 @@ export default function GamePage () {
         setSelectedAnswers(newArr);
       }
     }
-    updateAnswer(PlayerId, answerIds);
+    updateAnswer(PlayerId, answerIds).then((data) => {
+      if (data.error) {
+        Alert.error(data.error);
+      }
+    });
   }
   return (
     <Fragment>

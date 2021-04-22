@@ -141,7 +141,6 @@ export default function EditQuestionPage () {
   }
 
   const handleSubmit = () => {
-    console.log(questionForm);
     try {
       checkQuestionForm();
       checkAnswerForm();

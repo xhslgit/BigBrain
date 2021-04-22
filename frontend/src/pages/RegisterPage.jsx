@@ -34,9 +34,6 @@ function register (email, password, name) {
     },
     body: JSON.stringify({ email, password, name }),
   }).then((data) => {
-    if (data.status === 200) {
-      return data.json();
-    }
     return data.json();
   });
 }

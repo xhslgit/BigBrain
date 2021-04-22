@@ -44,7 +44,7 @@ export default function JoinPage () {
   const handleJoinGame = () => {
     joinSession(joinForm.code, joinForm.name).then((data) => {
       if (data.error) {
-        Alert.error(data.error, 4000);
+        Alert.error(data.error, 3000);
       } else {
         history.push(`/game/${joinForm.code}/${data.playerId}`);
       }

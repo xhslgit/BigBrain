@@ -14,7 +14,7 @@ export default function PlayerGameEnded ({ finalResults, onJoin }) {
         </div>
       ))}
       <br></br>
-      <Button appearance='ghost' color='green' onClick={() => history.push('/join')}>Join another game!</Button>
+      <Button appearance='ghost' color='green' onClick={onJoin}>Join another game!</Button>
     </div>
   )
 }
