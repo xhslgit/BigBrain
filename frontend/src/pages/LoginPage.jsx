@@ -79,7 +79,7 @@ export default function LoginPage () {
           </FormGroup>
           <FormGroup>
               <LoginButton
-                style={{ margin: '10px' }} appearance="primary" type='submit' text="Login"
+                style={{ margin: '10px' }} appearance="primary" type='submit' text="Login" id='login-button'
               />
               <Link style={{ margin: '10px' }} to="/register">Register here!</Link>
               <Divider>or</Divider>
