@@ -86,9 +86,9 @@ export default function DashboardPage () {
   return (
     <Fragment>
       <GlobalStyle />
-        <NewGameButton appearance="primary" onClick={toggleShow}>New Game</NewGameButton>
-        <LogoutButton appearance="primary" onClick={handleLogout}>Logout</LogoutButton>
-        <JoinGameButton appearance="primary" onClick={handleJoinGame}>Join a Game</JoinGameButton>
+        <NewGameButton appearance="primary" onClick={toggleShow} id="newgame-button">New Game</NewGameButton>
+        <LogoutButton appearance="primary" onClick={handleLogout} id="logout-button">Logout</LogoutButton>
+        <JoinGameButton appearance="primary" onClick={handleJoinGame} id="joingame-button">Join a Game</JoinGameButton>
         <Container>
           <Header style={{ textAlign: 'center' }}>
             <h1>BigBrain</h1>
@@ -101,7 +101,8 @@ export default function DashboardPage () {
                   <QuizCard
                     key={item.id}
                     QuizId={item.id}
-                    onDelete={getSetQuizzes}/>)
+                    onDelete={getSetQuizzes}
+                    idx={idx}/>)
                 : (
                   <h1> Empty </h1>
                   )

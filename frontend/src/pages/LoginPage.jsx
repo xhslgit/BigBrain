@@ -6,13 +6,13 @@ import {
   Schema,
   ControlLabel,
   FormControl,
-  Button,
   Divider,
   Alert
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
 import useToken from '../utils/useToken';
 import { MainPageContainer, RegPanel } from '../style';
+import LoginButton from '../components/LoginButton';
 const { StringType } = Schema.Types;
 
 const model = Schema.Model({
@@ -39,8 +39,12 @@ export default function LoginPage () {
       return;
     }
     login(loginForm.email, loginForm.password).then((data) => {
-      setToken(data.token);
-      history.push('/dashboard');
+      if (data.error) {
+        Alert.error(data.error, 3000);
+      } else {
+        setToken(data.token);
+        history.push('/dashboard');
+      }
     })
   }
   const login = (email, password) => {
@@ -51,9 +55,7 @@ export default function LoginPage () {
       },
       body: JSON.stringify({ email, password }),
     }).then((data) => {
-      if (data.status === 200) {
-        return data.json();
-      }
+      return data.json();
     });
   }
   return (
@@ -76,7 +78,9 @@ export default function LoginPage () {
             <FormControl id='password-input' name='password' type='password'/>
           </FormGroup>
           <FormGroup>
-              <Button style={{ margin: '10px' }} appearance="primary" type="submit">Login</Button>
+              <LoginButton
+                style={{ margin: '10px' }} appearance="primary" type='submit' text="Login"
+              />
               <Link style={{ margin: '10px' }} to="/register">Register here!</Link>
               <Divider>or</Divider>
               <Link to="/">Join a game!</Link>

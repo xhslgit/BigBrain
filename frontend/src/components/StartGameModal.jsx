@@ -24,8 +24,8 @@ export default function StartGameModal ({ showModal, onHide, onAdvance, onCopyCo
         <p>Click the button below to copy the link</p>
       </Modal.Body>
       <Modal.Footer style={{ textAlign: 'center' }}>
-        <Button onClick={onCopyLink} appearance="primary">Copy link to clipboard</Button>
-        <Button onClick={onHide} appearance="ghost">Back to dashboard</Button>
+        <Button onClick={onCopyLink} appearance="primary" id='copytoclip-button'>Copy link to clipboard</Button>
+        <Button onClick={onHide} appearance="ghost" id='backtodash-button'>Back to dashboard</Button>
       </Modal.Footer>
     </Modal>
   )
@@ -37,5 +37,5 @@ StartGameModal.propTypes = {
   onAdvance: PropTypes.func,
   onCopyCode: PropTypes.func,
   onCopyLink: PropTypes.func,
-  quizInfo: PropTypes.array,
+  quizInfo: PropTypes.object,
 }

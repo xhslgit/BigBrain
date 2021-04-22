@@ -12,7 +12,7 @@ import { ImageContainer, QuizCardPanel, OptionsMenu } from '../style';
 import GameEndedModal from './GameEndedModal';
 import StartGameModal from './StartGameModal';
 
-export default function QuizCard ({ QuizId, onDelete }) {
+export default function QuizCard ({ QuizId, onDelete, idx }) {
   const token = useToken().token;
   const [quizInfo, setQuizInfo] = useState({});
   const history = useHistory();
@@ -171,11 +171,11 @@ export default function QuizCard ({ QuizId, onDelete }) {
           : <p><u>No questions added yet</u></p>
         }
         <p>Quiz created by: <b>{quizInfo.owner}</b></p>
-        <Button appearance="primary" onClick={handleStart}>{!quizInfo.active ? 'Start session' : 'View session'}</Button>
+        <Button appearance="primary" onClick={handleStart} id={'startgame-button' + idx}>{!quizInfo.active ? 'Start session' : 'View session'}</Button>
         <OptionsMenu>
-          <Button appearance="primary" onClick={handleEdit}>Edit</Button>
-          <Button appearance="ghost" color="red" onClick={handleStop}>Stop</Button>
-          <Button appearance="primary" color="red" onClick={handleDelete}>Delete</Button>
+          <Button appearance="primary" onClick={handleEdit} id={'editgame-button' + idx}>Edit</Button>
+          <Button appearance="ghost" color="red" onClick={handleStop} id={'stopgame-button' + idx}>Stop</Button>
+          <Button appearance="primary" color="red" onClick={handleDelete} id={'deletegame-button' + idx}>Delete</Button>
         </OptionsMenu>
       </Panel>
         <StartGameModal
@@ -198,4 +198,5 @@ export default function QuizCard ({ QuizId, onDelete }) {
 QuizCard.propTypes = {
   QuizId: PropTypes.number.isRequired,
   onDelete: PropTypes.func.isRequired,
+  idx: PropTypes.number,
 };

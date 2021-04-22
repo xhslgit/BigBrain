@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import {
   Button,
   Modal,
-  Input
+  Input,
+  Alert
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
 import PropTypes from 'prop-types';
@@ -22,24 +23,23 @@ export default function NewGameModal ({ showModal, onHide, onCreate }) {
         name: name
       }),
     }).then((data) => {
-      if (data.status === 200) {
-        return data.json();
-      } else {
-        // error handling later
-        return data.json();
-      }
+      return data.json();
     });
   }
 
   const handleSubmit = () => {
-    console.log(gameName);
     if (gameName === '') {
-      console.log('invalid name');
-      onHide();
+      Alert.error('Invalid game name', 3000);
     } else {
-      newGame(token, gameName);
-      onHide();
-      return onCreate();
+      newGame(token, gameName).then((data) => {
+        if (data.error) {
+          Alert.error(data.error, 3000);
+        } else {
+          Alert.success('Game created', 3000);
+          onHide();
+          return onCreate();
+        }
+      })
     }
   }
 
@@ -50,21 +50,14 @@ export default function NewGameModal ({ showModal, onHide, onCreate }) {
   return (
     <Modal backdrop={true} show={showModal} onHide={onHide} style={{ textAlign: 'center' }}>
       <Modal.Header>
-        <Modal.Title><h2>Create a new quiz</h2></Modal.Title>
+        <h2>Create a new quiz</h2>
       </Modal.Header>
       <Modal.Body>
-        <Input placeholder='Enter quiz name' onChange={e => setGameName(e)} />
+        <Input id='newgamename-input' placeholder='Enter quiz name' onChange={e => setGameName(e)} />
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          onClick={handleSubmit}
-          appearance="primary"
-        >
-          Ok
-        </Button>
-        <Button onClick={handleHide} appearance="subtle">
-          Cancel
-        </Button>
+        <Button onClick={handleSubmit} appearance="primary" id='creategame-button'>Create game</Button>
+        <Button onClick={handleHide} appearance="subtle">Cancel</Button>
       </Modal.Footer>
     </Modal>
   )

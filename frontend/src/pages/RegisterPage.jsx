@@ -59,7 +59,11 @@ export default function RegisterPage () {
       return;
     }
     register(registerForm.email, registerForm.password, registerForm.name).then((data) => {
-      history.push('/login');
+      if (data.error) {
+        Alert.error(data.error, 3000);
+      } else {
+        history.push('/login');
+      }
     })
   }
   return (

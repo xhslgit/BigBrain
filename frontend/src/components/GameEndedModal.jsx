@@ -18,8 +18,8 @@ export default function GameEndedModal ({ showModal, onHide, onResults }) {
         <b>If you would like to view results, click below</b>
       </Modal.Body>
       <Modal.Footer style={{ textAlign: 'center' }}>
-        <Button onClick={onResults} appearance='primary'>See results</Button>
-        <Button onClick={onHide} appearance='ghost' color='green' >Back to dashboard</Button>
+        <Button onClick={onResults} appearance='primary' id='toresults-button'>See results</Button>
+        <Button onClick={onHide} appearance='ghost' color='green' id='todash-button'>Back to dashboard</Button>
       </Modal.Footer>
     </Modal>
   )
