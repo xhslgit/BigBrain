@@ -8,6 +8,7 @@ import {
 import 'rsuite/dist/styles/rsuite-default.css';
 import PropTypes from 'prop-types';
 import useToken from '../utils/useToken';
+import { ModalStyle } from '../style';
 export default function NewGameModal ({ showModal, onHide, onCreate }) {
   const [gameName, setGameName] = useState('');
   const token = useToken().token;
@@ -48,7 +49,7 @@ export default function NewGameModal ({ showModal, onHide, onCreate }) {
   }
 
   return (
-    <Modal backdrop={true} show={showModal} onHide={onHide} style={{ textAlign: 'center' }}>
+    <ModalStyle backdrop={true} show={showModal} onHide={onHide} >
       <Modal.Header>
         <h2>Create a new quiz</h2>
       </Modal.Header>
@@ -59,7 +60,7 @@ export default function NewGameModal ({ showModal, onHide, onCreate }) {
         <Button onClick={handleSubmit} appearance="primary" id='creategame-button'>Create game</Button>
         <Button onClick={handleHide} appearance="subtle">Cancel</Button>
       </Modal.Footer>
-    </Modal>
+    </ModalStyle>
   )
 }
 

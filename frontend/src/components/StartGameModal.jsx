@@ -7,14 +7,15 @@ import {
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
 import PropTypes from 'prop-types';
+import { ModalStyle } from '../style';
 
 export default function StartGameModal ({ showModal, onHide, onAdvance, onCopyCode, onCopyLink, quizInfo }) {
   return (
-    <Modal backdrop="static" show={showModal} onHide={onHide} size="xs">
-      <Modal.Header style={{ textAlign: 'center' }}>
+    <ModalStyle backdrop="static" show={showModal} onHide={onHide} size="xs">
+      <Modal.Header >
         <h2>Game Started</h2>
       </Modal.Header>
-      <Modal.Body style={{ textAlign: 'center' }}>
+      <Modal.Body>
         Your game has started, your Session ID is<span onClick={onCopyCode}><h2>{quizInfo.active}</h2></span>
         <Divider>Game controls</Divider>
         <Button appearance='primary' color='green' onClick={onAdvance}>Advance to next question</Button>
@@ -27,7 +28,7 @@ export default function StartGameModal ({ showModal, onHide, onAdvance, onCopyCo
         <Button onClick={onCopyLink} appearance="primary" id='copytoclip-button'>Copy link to clipboard</Button>
         <Button onClick={onHide} appearance="ghost" id='backtodash-button'>Back to dashboard</Button>
       </Modal.Footer>
-    </Modal>
+    </ModalStyle>
   )
 }
 

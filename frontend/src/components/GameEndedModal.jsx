@@ -5,10 +5,11 @@ import {
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
 import PropTypes from 'prop-types';
+import { ModalStyle } from '../style';
 export default function GameEndedModal ({ showModal, onHide, onResults }) {
   return (
-    <Modal backdrop="static" show={showModal} onHide={onHide} size="xs" >
-      <Modal.Body style={{ textAlign: 'center' }}>
+    <ModalStyle backdrop="static" show={showModal} onHide={onHide} size="xs" >
+      <Modal.Body >
       <Modal.Header>
         <h1>Game Ended</h1>
         <br></br>
@@ -21,7 +22,7 @@ export default function GameEndedModal ({ showModal, onHide, onResults }) {
         <Button onClick={onResults} appearance='primary' id='toresults-button'>See results</Button>
         <Button onClick={onHide} appearance='ghost' color='green' id='todash-button'>Back to dashboard</Button>
       </Modal.Footer>
-    </Modal>
+    </ModalStyle>
   )
 }
 

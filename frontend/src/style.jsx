@@ -3,7 +3,8 @@ import styled, { createGlobalStyle } from 'styled-components';
 import {
   Panel,
   Button,
-  FlexboxGrid
+  FlexboxGrid,
+  Modal
 } from 'rsuite';
 
 export const GlobalStyle = createGlobalStyle`
@@ -50,10 +51,13 @@ export const RegPanel = styled(Panel)`
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 30%;
   transform: translate(-50%, -50%);
-  width: 25%;
   text-align: center;
   background-color: white;
+  @media screen and (max-width: 800px) {
+    width: 80%;
+  }
 `
 
 export const MainPageContainer = styled.div`
@@ -70,6 +74,7 @@ const DashboardButton = styled(Button)`
   position: fixed; 
   border-radius: 25px; 
   font-size: 20px;
+  z-index: 100;
 `
 
 export const NewGameButton = styled(DashboardButton)`
@@ -79,11 +84,20 @@ export const NewGameButton = styled(DashboardButton)`
 export const JoinGameButton = styled(DashboardButton)`
   top: 10px;
   left: 10px;
+  @media screen and (max-width: 675px) {
+    top: unset;
+    bottom: 30px;
+  }
 `
 
 export const LogoutButton = styled(DashboardButton)`
   top: 60px;
   left: 10px;
+  @media screen and (max-width: 675px) {
+    top: unset;
+    left: 150px;
+    bottom: 30px;
+  }
 `
 export const QuizCardGrid = styled(FlexboxGrid)`
   column-gap: 50px;
@@ -91,6 +105,9 @@ export const QuizCardGrid = styled(FlexboxGrid)`
   margin: auto;
   margin-top: 30px;
   max-width: 60%;
+  @media screen and (max-width: 675px) {
+    margin-bottom: 100px;
+  }
 `
 
 export const QuizCardPanel = styled(Panel)`
@@ -111,20 +128,25 @@ export const OptionsMenu = styled.div`
 
 export const QuizEditPanel = styled(Panel)`
   width: 40%;
-  margin: auto;
-  margin-top: 5em;
+  margin: 5em auto;
   text-align: center;
   background-color: white;
   & > h2, h3, h4 {
     color: black;
   }
+  @media screen and (max-width: 1400px) {
+    width: 80%;
+  }
 `
 export const QuestionEditPanel = styled(Panel)`
-  width: 50%;
+  width: 60%;
   margin: 5em auto;
+  @media screen and (max-width: 1200px) {
+    width: 80%;
+  }
 `
 export const GamePagePanel = styled(Panel)`
-  width: 50%;
+  width: 90%;
   margin: 5em auto;
   text-align: center;
   & > h1, h2, h3, h4 {
@@ -134,6 +156,13 @@ export const GamePagePanel = styled(Panel)`
 
 export const GameResultsPanel = styled(Panel)`
   margin: 5em auto;
-  width: 50%;
+  width: 90%;
   text-align: center;
+`
+
+export const ModalStyle = styled(Modal)`
+  text-align: center;
+  @media screen and (max-width: 675px) {
+    width: 80%;
+  }
 `
