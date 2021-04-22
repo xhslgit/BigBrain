@@ -2,8 +2,9 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import useToken from '../utils/useToken';
 import QuestionBarGraph from '../components/QuestionBarGraph';
-import { List, FlexboxGrid, Button } from 'rsuite';
+import { Button } from 'rsuite';
 import { GlobalStyle, GameResultsPanel } from '../style';
+import DashboardResultsTopPlayers from '../components/DashboardResultsTopPlayers';
 
 export default function DashboardResultsPage () {
   const SessionId = useParams().SessionId;
@@ -75,20 +76,9 @@ export default function DashboardResultsPage () {
         <h1>Here are your results for session {SessionId}!</h1>
         <h2>Top 5 players!</h2>
         <br></br>
-        <List bordered>
-          {playersData.map((item, idx) => (
-            <List.Item key={idx}>
-              <FlexboxGrid justify="space-between">
-                <FlexboxGrid.Item>
-                  <h4><b>{idx + 1}.</b> {item.name}</h4>
-                </FlexboxGrid.Item>
-                <FlexboxGrid.Item>
-                  <h4>{item.score} points</h4>
-                </FlexboxGrid.Item>
-              </FlexboxGrid>
-            </List.Item>
-          ))}
-        </List>
+        <DashboardResultsTopPlayers
+          playersData={playersData}
+        />
         <h2>See each questions results!</h2>
         <div style={{ width: '500px', margin: 'auto' }}>
           {questionData.length !== 0 ? <QuestionBarGraph data={questionData} /> : 'loading graph'}

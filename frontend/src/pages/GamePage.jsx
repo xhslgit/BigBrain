@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import {
-  Panel, Divider, Alert, Button
+  Panel, Divider, Alert
 } from 'rsuite';
 import ReactPlayer from 'react-player'
 import { AllAnswerContainer, AnswerBox, GamePagePanel, GlobalStyle } from '../style';
+import CorrectAnswers from '../components/CorrectAnswers';
+import PlayerGameEnded from '../components/PlayerGameEnded';
 
 export default function GamePage () {
   const history = useHistory();
@@ -250,29 +252,17 @@ export default function GamePage () {
                       </AllAnswerContainer>
                   </div>)
                 : (
-                  <div>
-                    <h2>
-                    {displayCorrectAnswers.length > 1 ? 'The correct answers were:' : 'The correct answer was:'}
-                    </h2>
-                    {displayCorrectAnswers.map((item) => (<h2 style={{ display: 'inline' }}key={item.id}>{item.answer}<br></br></h2>))}
-                    <br></br>
-                    <br></br>
-                    <h4>Waiting for admin to continue to next question</h4>
-                  </div>
+                  <CorrectAnswers
+                    displayCorrectAnswers={displayCorrectAnswers}
+                  />
                   )}
               </Panel>)
-          : (<div>
-              <h2>Your game has ended, here are your results!</h2>
-              {finalResults.map((item, idx) => (
-                <div key={item.question}>
-                  <h2>Question {idx + 1}</h2>
-                  <h3>{item.result ? <u>Correct!</u> : <u>Incorrect!</u>}</h3>
-                  <h4>This question took you <u>{item.timeTaken}</u> seconds to answer</h4>
-                </div>
-              ))}
-              <br></br>
-              <Button appearance='ghost' color='green' onClick={() => history.push('/join')}>Join another game!</Button>
-            </div>)}
+          : (
+            <PlayerGameEnded
+              finalResults={finalResults}
+              onJoin={() => history.push('/join')}
+            />
+            )}
       </GamePagePanel>
     </Fragment>
   )

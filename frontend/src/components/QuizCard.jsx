@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   Panel,
   Button,
-  Modal,
   Alert,
-  Divider,
 } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
 import PropTypes from 'prop-types';
 import useToken from '../utils/useToken';
 import { ImageContainer, QuizCardPanel, OptionsMenu } from '../style';
+import GameEndedModal from './GameEndedModal';
+import StartGameModal from './StartGameModal';
 
 export default function QuizCard ({ QuizId, onDelete }) {
   const token = useToken().token;
@@ -178,39 +178,19 @@ export default function QuizCard ({ QuizId, onDelete }) {
           <Button appearance="primary" color="red" onClick={handleDelete}>Delete</Button>
         </OptionsMenu>
       </Panel>
-      <Modal backdrop="static" show={startModal} onHide={() => showStartModal(false)} size="xs">
-          <Modal.Header style={{ textAlign: 'center' }}>
-            <h2>Game Started</h2>
-          </Modal.Header>
-          <Modal.Body style={{ textAlign: 'center' }}>
-            Your game has started, your Session ID is<span onClick={handleCopyCode}><h2>{quizInfo.active}</h2></span>
-            <Divider>Game controls</Divider>
-            <Button appearance='primary' color='green' onClick={handleAdvanceQuestion}>Advance to next question</Button>
-            <Divider>to Join</Divider>
-            <p>Click the code above to copy or <Link to={{ pathname: '/join/' + quizInfo.active }}>this</Link> to join the game</p>
-            <Divider>Or</Divider>
-            <p>Click the button below to copy the link</p>
-          </Modal.Body>
-          <Modal.Footer style={{ textAlign: 'center' }}>
-            <Button onClick={handleCopyLink} appearance="primary">Copy link to clipboard</Button>
-            <Button onClick={() => showStartModal(false)} appearance="ghost">Back to dashboard</Button>
-          </Modal.Footer>
-        </Modal>
-
-        <Modal backdrop="static" show={resultsModal} onHide={() => showResultsModal(false)} size="xs">
-          <Modal.Body style={{ textAlign: 'center' }}>
-          <Modal.Header>
-            <h2>Game Ended</h2>
-          </Modal.Header>
-            You have ended your session
-            <br></br>
-            If you would like to view results, click below
-          </Modal.Body>
-          <Modal.Footer style={{ textAlign: 'right' }}>
-            <Button onClick={() => history.push(`/dashboard/${QuizId}/session/${endedSession}/results`)} appearance="primary">See results</Button>
-            <Button onClick={() => showResultsModal(false)} appearance="ghost">Back to dashboard</Button>
-          </Modal.Footer>
-        </Modal>
+        <StartGameModal
+          showModal={startModal}
+          onHide={() => showStartModal(false)}
+          onCopyLink={handleCopyLink}
+          onCopyCode={handleCopyCode}
+          onAdvance={handleAdvanceQuestion}
+          quizInfo={quizInfo}
+        />
+        <GameEndedModal
+          showModal={resultsModal}
+          onHide={() => showResultsModal(false)}
+          onResults={() => history.push(`/dashboard/${QuizId}/session/${endedSession}/results`)}
+        />
     </QuizCardPanel>
   )
 }
