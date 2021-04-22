@@ -10,11 +10,11 @@ describe('JoinPage', () => {
       <JoinPage />
     </Router>
     );
-    const code = screen.getByText("Session Code:");
+    const code = screen.getByText('Session Code:');
     expect(code).toBeInTheDocument();
-    const name = screen.getByText("Choose your name:");
+    const name = screen.getByText('Choose your name:');
     expect(name).toBeInTheDocument();
-    const create = screen.getByText("Create a game here!");
+    const create = screen.getByText('Create a game here!');
     expect(create).toBeInTheDocument();
   })
 });

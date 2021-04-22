@@ -10,9 +10,9 @@ describe('RegisterPage', () => {
       <RegisterPage />
     </Router>
     );
-    const register = screen.getByText("Register for an account");
+    const register = screen.getByText('Register for an account');
     expect(register).toBeInTheDocument();
-    const join = screen.getByText("Join a game!");
+    const join = screen.getByText('Join a game!');
     expect(join).toBeInTheDocument();
   })
 });

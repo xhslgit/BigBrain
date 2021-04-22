@@ -10,7 +10,7 @@ describe('LoginPage', () => {
         <LoginPage />
     </Router>
     );
-    const element = screen.getAllByText("Login");
+    const element = screen.getAllByText('Login');
     expect(element).toHaveLength(2);
     expect(element[0]).toBeInTheDocument();
     expect(element[1]).toBeInTheDocument();
